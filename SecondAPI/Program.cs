@@ -1,15 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using SecondAPI.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// ------- Builder para testes locais -----------
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//options.UseInMemoryDatabase(("DefaultConnection")));
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()   // permite qualquer origem
+            .AllowAnyMethod()   // permite GET, POST, PUT, PATCH, DELETE...
+            .AllowAnyHeader();  // permite qualquer header
+    });
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -19,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 

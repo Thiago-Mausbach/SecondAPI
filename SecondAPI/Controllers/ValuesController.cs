@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SecondAPI.Context;
 using SecondAPI.Model;
 
 namespace SecondAPI.Controllers;
@@ -8,20 +8,25 @@ namespace SecondAPI.Controllers;
 [ApiController]
 public class LivrosController : ControllerBase
 {
-    public static List<Dados> livros = new List<Dados>();
 
+    private readonly AppDbContext _context;
+
+    public LivrosController(AppDbContext context)
+    {
+        _context = context;
+    }
 
     [HttpGet]
     public ActionResult<IEnumerable<Dados>> Get()
     {
-        return Ok(livros);
+        return _context.Livros.ToList();
     }
 
     [HttpGet("{id}")]
 
     public ActionResult<Dados> Get(int id)
     {
-        var busca = livros.FirstOrDefault(x => x.Id == id);
+        var busca = _context.Livros.Find(id);
         if (busca == null)
             return NotFound($"Id {id} não encontrado.");
         else
@@ -30,36 +35,36 @@ public class LivrosController : ControllerBase
 
     [HttpPost]
 
-    public ActionResult Post([FromBody] List<Dados> biblioteca) 
+    public ActionResult Post([FromBody] List<Dados> biblioteca)
     {
-        int novoId = livros.Any() ? livros.Max(x => x.Id) + 1 : 1;
-        
+
         foreach (var livro in biblioteca)
         {
-            livro.Id = novoId++;
-            livros.Add(livro);
+            _context.Livros.Add(livro);
         }
 
-        return Created();
+        _context.SaveChanges();
+        return Ok("Livros adicionados com sucesso");
     }
 
     [HttpPut("{id}")]
     public ActionResult Put(int id, [FromBody] Dados livro)
     {
-        var busca = livros.FirstOrDefault(x => x.Id == id);
-        
+        if (livro == null)
+            return BadRequest("Informãções do livro inválidas");
+
+        var busca = _context.Livros.Find(id);
+
         if (busca == null)
-        {
             return NotFound($"{id} não encontrado.");
-        }
-        else
-        {
-            busca.Titulo = livro.Titulo;
-            busca.Autor = livro.Autor;
-            busca.Ano = livro.Ano;
-            busca.Genero = livro.Genero;
-            return Ok(busca);
-        }
+
+        busca.Titulo = livro.Titulo;
+        busca.Autor = livro.Autor;
+        busca.Ano = livro.Ano;
+        busca.Genero = livro.Genero;
+
+        _context.SaveChanges();
+        return Ok(busca);
     }
 
     [HttpPatch]
@@ -67,7 +72,7 @@ public class LivrosController : ControllerBase
     public ActionResult Patch(int id, [FromBody] Dados livro)
     {
 
-        var busca = livros.FirstOrDefault(x => x.Id == id);
+        var busca = _context.Livros.Find(id);
 
         if (busca == null)
         {
@@ -86,6 +91,7 @@ public class LivrosController : ControllerBase
         if (livro.Genero != null)
             busca.Genero = livro.Genero;
 
+        _context.SaveChanges();
         return Ok(busca);
     }
 
@@ -93,11 +99,13 @@ public class LivrosController : ControllerBase
 
     public ActionResult Delete(int id)
     {
-        var busca = livros.FirstOrDefault(x => x.Id == id);
+        var busca = _context.Livros.Find(id);
         if (busca == null)
             return NotFound();
         else
-            livros.Remove(busca);
-            return Ok(busca);
+            _context.Livros.Remove(busca);
+
+        _context.SaveChanges();
+        return Ok(busca);
     }
 }
