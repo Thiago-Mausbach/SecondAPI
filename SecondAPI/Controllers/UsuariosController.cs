@@ -78,7 +78,7 @@ public class UsuariosController : ControllerBase
             return NotFound($"Usuário de Id {id} não encontrado.");
         }
 
-        if (user.Nome!= null && user.Nome != "")
+        if (user.Nome != null && user.Nome != "")
             busca.Nome = user.Nome;
 
         if (user.Sobrenome != null)

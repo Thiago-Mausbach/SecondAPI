@@ -1,5 +1,3 @@
-using System.Net.Mail;
-
 namespace SecondAPI.Model
 {
     public class DadosLivro
@@ -10,7 +8,7 @@ namespace SecondAPI.Model
         public string? Autor { get; set; }
 
         public int? Ano { get; set; }
-        
+
         public string? Genero { get; set; }
     }
 
@@ -26,7 +24,7 @@ namespace SecondAPI.Model
 
     public class LivroEmprestado
     {
-       public DadosLivro Titulo { get; set; } = null!;
+        public DadosLivro Titulo { get; set; } = null!;
 
         public DateOnly DataEmprestimo { get; set; }
 
