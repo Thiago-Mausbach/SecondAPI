@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SecondAPI.Context;
-using SecondAPI.Model;
+using Microsoft.EntityFrameworkCore;
+using SecondAPI.Context.Context;
+using SecondAPI.Context.Model;
 
-namespace SecondAPI.Controllers;
+namespace SecondAPI.Controllers.Controllers;
 
 [Route("API/[controller]")]
 [ApiController]
@@ -17,16 +18,17 @@ public class LivrosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<DadosLivro>> Get()
+    public async Task<ActionResult<IEnumerable<DadosLivro>>> GetAsync()
     {
-        return _context.Livros.ToList();
+        var users = await _context.Livros.ToListAsync();
+        return Ok(users);
     }
 
     [HttpGet("{id}")]
 
-    public ActionResult<DadosLivro> Get(int id)
+    public async Task<ActionResult<DadosLivro>> GetAsync(int id)
     {
-        var busca = _context.Livros.Find(id);
+        var busca = await _context.Livros.FindAsync(id);
         if (busca == null)
             return NotFound($"Id {id} não encontrado.");
         else
@@ -35,25 +37,25 @@ public class LivrosController : ControllerBase
 
     [HttpPost]
 
-    public ActionResult Post([FromBody] List<DadosLivro> biblioteca)
+    public async Task<ActionResult> PostAsync([FromBody] List<DadosLivro> biblioteca)
     {
 
         foreach (var livro in biblioteca)
         {
-            _context.Livros.Add(livro);
+            await _context.Livros.AddAsync(livro);
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok("Livros adicionados com sucesso");
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromBody] DadosLivro livro)
+    public async Task<ActionResult> PutAsync(int id, [FromBody] DadosLivro livro)
     {
         if (livro == null)
             return BadRequest("Informãções do livro inválidas");
 
-        var busca = _context.Livros.Find(id);
+        var busca = await _context.Livros.FindAsync(id);
 
         if (busca == null)
             return NotFound($"{id} não encontrado.");
@@ -63,16 +65,16 @@ public class LivrosController : ControllerBase
         busca.Ano = livro.Ano;
         busca.Genero = livro.Genero;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(busca);
     }
 
     [HttpPatch]
 
-    public ActionResult Patch(int id, [FromBody] DadosLivro livro)
+    public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosLivro livro)
     {
 
-        var busca = _context.Livros.Find(id);
+        var busca = await _context.Livros.FindAsync(id);
 
         if (busca == null)
         {
@@ -91,21 +93,21 @@ public class LivrosController : ControllerBase
         if (livro.Genero != null)
             busca.Genero = livro.Genero;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(busca);
     }
 
     [HttpDelete]
 
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> DeleteAsync(int id)
     {
-        var busca = _context.Livros.Find(id);
+        var busca = await _context.Livros.FindAsync(id);
         if (busca == null)
             return NotFound();
         else
             _context.Livros.Remove(busca);
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(busca);
     }
 }

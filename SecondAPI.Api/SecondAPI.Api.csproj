@@ -24,4 +24,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SecondAPI.Context\SecondAPI.Context.csproj" />
+    <ProjectReference Include="..\SecondAPI.Controllers\SecondAPI.Controllers.csproj" />
+  </ItemGroup>
+
 </Project>

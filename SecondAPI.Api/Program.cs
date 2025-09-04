@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
-using SecondAPI.Context;
+using SecondAPI.Context.Context;
+using SecondAPI.Controllers.Controllers;
 
-namespace SecondAPI;
+namespace SecondAPI.Api;
 
 public class Program
 {
@@ -12,6 +14,13 @@ public class Program
         builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+        builder.Services.AddControllers()
+               .ConfigureApplicationPartManager(apm =>
+               {
+                   apm.ApplicationParts.Add(new AssemblyPart(typeof(UsuariosController).Assembly));
+                   apm.ApplicationParts.Add(new AssemblyPart(typeof(LivrosController).Assembly));
+               });
 
         // ------- Builder para testes locais -----------
         //builder.Services.AddDbContext<AppDbContext>(options =>

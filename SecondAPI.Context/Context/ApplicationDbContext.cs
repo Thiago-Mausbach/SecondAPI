@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SecondAPI.Model;
+using SecondAPI.Context.Model;
 
-namespace SecondAPI.Context;
+namespace SecondAPI.Context.Context;
 
 public class AppDbContext : DbContext
 {

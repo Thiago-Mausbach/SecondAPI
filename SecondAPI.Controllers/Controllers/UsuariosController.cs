@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SecondAPI.Context;
-using SecondAPI.Model;
+using Microsoft.EntityFrameworkCore;
+using SecondAPI.Context.Context;
+using SecondAPI.Context.Model;
 
-namespace SecondAPI.Controllers;
+namespace SecondAPI.Controllers.Controllers;
 
 [Route("API/[controller]")]
 [ApiController]
@@ -16,16 +17,17 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<DadosUsuario>> Get()
+    public async Task<ActionResult<IEnumerable<DadosUsuario>>> GetAsync()
     {
-        return _context.Usuarios.ToList();
+        var users = await _context.Usuarios.ToListAsync();
+        return Ok(users);
     }
 
     [HttpGet("{id}")]
 
-    public ActionResult<DadosUsuario> Get(int id)
+    public async Task<ActionResult<DadosUsuario>> GetAsync(int id)
     {
-        var busca = _context.Usuarios.Find(id);
+        var busca = await _context.Usuarios.FindAsync(id);
         if (busca == null)
             return NotFound($"Usuario de Id {id} não encontrado.");
         else
@@ -34,25 +36,25 @@ public class UsuariosController : ControllerBase
 
     [HttpPost]
 
-    public ActionResult Post([FromBody] List<DadosUsuario> users)
+    public async Task<ActionResult> PostAsync([FromBody] List<DadosUsuario> users)
     {
 
         foreach (var user in users)
         {
-            _context.Usuarios.Add(user);
+            await _context.Usuarios.AddAsync(user);
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok("Usuários adicionados com sucesso");
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromBody] DadosUsuario user)
+    public async Task<ActionResult> PutAsync(int id, [FromBody] DadosUsuario user)
     {
         if (user == null)
             return BadRequest("Informãções de usuário inválidas");
 
-        var busca = _context.Usuarios.Find(id);
+        var busca = await _context.Usuarios.FindAsync(id);
 
         if (busca == null)
             return NotFound($"{id} não encontrado.");
@@ -62,16 +64,16 @@ public class UsuariosController : ControllerBase
         busca.Telefone = user.Telefone;
         busca.Email = user.Email;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(busca);
     }
 
     [HttpPatch]
 
-    public ActionResult Patch(int id, [FromBody] DadosUsuario user)
+    public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosUsuario user)
     {
 
-        var busca = _context.Usuarios.Find(id);
+        var busca = await _context.Usuarios.FindAsync(id);
 
         if (busca == null)
         {
@@ -90,21 +92,21 @@ public class UsuariosController : ControllerBase
         if (user.Email != null && user.Email != "")
             busca.Email = user.Email; //validar campo estar vindo vazio pra troca
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(busca);
     }
 
     [HttpDelete]
 
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> DeleteAsync(int id)
     {
-        var busca = _context.Usuarios.Find(id);
+        var busca = await _context.Usuarios.FindAsync(id);
         if (busca == null)
             return NotFound();
         else
             _context.Usuarios.Remove(busca);
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(busca);
     }
 }

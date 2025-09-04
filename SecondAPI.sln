@@ -4,11 +4,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Api", "SecondAPI.Api\SecondAPI.Api.csproj", "{2BE630C2-DF71-4BDE-8ED4-2E4E40F5BF20}"
+	ProjectSection(ProjectDependencies) = postProject
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9} = {40F5EFDC-16B4-400A-ADC6-3399D904B0A9}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		dockerfile-second-api = dockerfile-second-api
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Controllers", "SecondAPI.Controllers\SecondAPI.Controllers.csproj", "{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Context", "SecondAPI.Context\SecondAPI.Context.csproj", "{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +39,30 @@ Global
 		{2BE630C2-DF71-4BDE-8ED4-2E4E40F5BF20}.Release|x64.Build.0 = Release|Any CPU
 		{2BE630C2-DF71-4BDE-8ED4-2E4E40F5BF20}.Release|x86.ActiveCfg = Release|Any CPU
 		{2BE630C2-DF71-4BDE-8ED4-2E4E40F5BF20}.Release|x86.Build.0 = Release|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Debug|x64.Build.0 = Debug|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Debug|x86.Build.0 = Debug|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Release|x64.ActiveCfg = Release|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Release|x64.Build.0 = Release|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{40F5EFDC-16B4-400A-ADC6-3399D904B0A9}.Release|x86.Build.0 = Release|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Debug|x64.Build.0 = Debug|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Debug|x86.Build.0 = Debug|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Release|x64.ActiveCfg = Release|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Release|x64.Build.0 = Release|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Release|x86.ActiveCfg = Release|Any CPU
+		{61D0C6F8-2618-43B0-9B66-C6F10E7B2711}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
