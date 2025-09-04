@@ -17,14 +17,14 @@ public class LivrosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Dados>> Get()
+    public ActionResult<IEnumerable<DadosLivro>> Get()
     {
         return _context.Livros.ToList();
     }
 
     [HttpGet("{id}")]
 
-    public ActionResult<Dados> Get(int id)
+    public ActionResult<DadosLivro> Get(int id)
     {
         var busca = _context.Livros.Find(id);
         if (busca == null)
@@ -35,7 +35,7 @@ public class LivrosController : ControllerBase
 
     [HttpPost]
 
-    public ActionResult Post([FromBody] List<Dados> biblioteca)
+    public ActionResult Post([FromBody] List<DadosLivro> biblioteca)
     {
 
         foreach (var livro in biblioteca)
@@ -48,7 +48,7 @@ public class LivrosController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromBody] Dados livro)
+    public ActionResult Put(int id, [FromBody] DadosLivro livro)
     {
         if (livro == null)
             return BadRequest("Informãções do livro inválidas");
@@ -69,7 +69,7 @@ public class LivrosController : ControllerBase
 
     [HttpPatch]
 
-    public ActionResult Patch(int id, [FromBody] Dados livro)
+    public ActionResult Patch(int id, [FromBody] DadosLivro livro)
     {
 
         var busca = _context.Livros.Find(id);
@@ -82,7 +82,7 @@ public class LivrosController : ControllerBase
         if (livro.Autor != null)
             busca.Autor = livro.Autor;
 
-        if (livro.Titulo != null)
+        if (livro.Titulo != null && livro.Titulo != "")
             busca.Titulo = livro.Titulo;
 
         if (livro.Ano != null)

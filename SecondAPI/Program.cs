@@ -17,9 +17,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy
-            .AllowAnyOrigin()   // permite qualquer origem
-            .AllowAnyMethod()   // permite GET, POST, PUT, PATCH, DELETE...
-            .AllowAnyHeader();  // permite qualquer header
+            .AllowAnyOrigin()  
+            .AllowAnyMethod()   
+            .AllowAnyHeader();  
     });
 });
 

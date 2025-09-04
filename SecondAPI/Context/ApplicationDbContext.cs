@@ -9,5 +9,6 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Dados> Livros { get; set; }
+    public DbSet<DadosLivro> Livros { get; set; }
+    public DbSet<DadosUsuario> Usuarios { get; set; }
 }
