@@ -10,17 +10,17 @@ namespace SecondAPI.Controllers.Controllers;
 public class LivrosController : ControllerBase
 {
 
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _service;
 
-    public LivrosController(AppDbContext context)
+    public LivrosController(AppDbContext service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DadosLivro>>> GetAsync()
     {
-        var users = await _context.Livros.ToListAsync();
+        var users = await _service.Livros.ToListAsync();
         return Ok(users);
     }
 
@@ -28,7 +28,7 @@ public class LivrosController : ControllerBase
 
     public async Task<ActionResult<DadosLivro>> GetAsync(int id)
     {
-        var busca = await _context.Livros.FindAsync(id);
+        var busca = await _service.Livros.FindAsync(id);
         if (busca == null)
             return NotFound($"Id {id} não encontrado.");
         else
@@ -42,10 +42,10 @@ public class LivrosController : ControllerBase
 
         foreach (var livro in biblioteca)
         {
-            await _context.Livros.AddAsync(livro);
+            await _service.Livros.AddAsync(livro);
         }
 
-        await _context.SaveChangesAsync();
+        await _service.SaveChangesAsync();
         return Ok("Livros adicionados com sucesso");
     }
 
@@ -55,7 +55,7 @@ public class LivrosController : ControllerBase
         if (livro == null)
             return BadRequest("Informãções do livro inválidas");
 
-        var busca = await _context.Livros.FindAsync(id);
+        var busca = await _service.Livros.FindAsync(id);
 
         if (busca == null)
             return NotFound($"{id} não encontrado.");
@@ -65,7 +65,7 @@ public class LivrosController : ControllerBase
         busca.Ano = livro.Ano;
         busca.Genero = livro.Genero;
 
-        await _context.SaveChangesAsync();
+        await _service.SaveChangesAsync();
         return Ok(busca);
     }
 
@@ -74,7 +74,7 @@ public class LivrosController : ControllerBase
     public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosLivro livro)
     {
 
-        var busca = await _context.Livros.FindAsync(id);
+        var busca = await _service.Livros.FindAsync(id);
 
         if (busca == null)
         {
@@ -93,7 +93,7 @@ public class LivrosController : ControllerBase
         if (livro.Genero != null)
             busca.Genero = livro.Genero;
 
-        await _context.SaveChangesAsync();
+        await _service.SaveChangesAsync();
         return Ok(busca);
     }
 
@@ -101,13 +101,13 @@ public class LivrosController : ControllerBase
 
     public async Task<ActionResult> DeleteAsync(int id)
     {
-        var busca = await _context.Livros.FindAsync(id);
+        var busca = await _service.Livros.FindAsync(id);
         if (busca == null)
             return NotFound();
         else
-            _context.Livros.Remove(busca);
+            _service.Livros.Remove(busca);
 
-        await _context.SaveChangesAsync();
+        await _service.SaveChangesAsync();
         return Ok(busca);
     }
 }

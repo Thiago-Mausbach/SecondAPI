@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SecondAPI.Context\SecondAPI.Context.csproj" />
+    <ProjectReference Include="..\SecondAPI.Context\SecondAPI.Domain.csproj" />
   </ItemGroup>
 
 </Project>

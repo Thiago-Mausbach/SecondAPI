@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SecondAPI.Context.Model;
+using static SecondAPI.Domain.Model.UsuarioModel;
 
 namespace SecondAPI.Context.Context;
 
