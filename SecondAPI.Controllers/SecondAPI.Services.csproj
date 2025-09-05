@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SecondAPI.Context\SecondAPI.Domain.csproj" />
+    <ProjectReference Include="..\SecondAPI.Infra.Database\SecondAPI.Infra.Database.csproj" />
   </ItemGroup>
 
 </Project>

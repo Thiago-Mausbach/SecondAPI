@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SecondAPI.Context.Context;
-using SecondAPI.Context.Model;
+using SecondAPI.Domain.Model;
+using SecondAPI.Services.Interfaces;
 
-namespace SecondAPI.Controllers.Controllers;
+namespace SecondAPI.Api.Controllers;
 
 [Route("API/[controller]")]
 [ApiController]
 public class LivrosController : ControllerBase
 {
 
-    private readonly AppDbContext _service;
+    private readonly ILivroService _service;
 
-    public LivrosController(AppDbContext service)
+    public LivrosController(ILivroService service)
     {
         _service = service;
     }
@@ -20,15 +19,18 @@ public class LivrosController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DadosLivro>>> GetAsync()
     {
-        var users = await _service.Livros.ToListAsync();
-        return Ok(users);
+        var users = await _service.BuscaAsync();
+        if (users == null)
+            return BadRequest("Nenhum usuário");
+        else
+            return Ok(users);
     }
 
     [HttpGet("{id}")]
 
-    public async Task<ActionResult<DadosLivro>> GetAsync(int id)
+    public async Task<ActionResult<DadosLivro>> GetIdAsync(int id)
     {
-        var busca = await _service.Livros.FindAsync(id);
+        var busca = await _service.BuscaIdAsync(id);
         if (busca == null)
             return NotFound($"Id {id} não encontrado.");
         else
@@ -40,12 +42,7 @@ public class LivrosController : ControllerBase
     public async Task<ActionResult> PostAsync([FromBody] List<DadosLivro> biblioteca)
     {
 
-        foreach (var livro in biblioteca)
-        {
-            await _service.Livros.AddAsync(livro);
-        }
-
-        await _service.SaveChangesAsync();
+        await _service.CriarAsync(biblioteca);
         return Ok("Livros adicionados com sucesso");
     }
 
@@ -55,18 +52,12 @@ public class LivrosController : ControllerBase
         if (livro == null)
             return BadRequest("Informãções do livro inválidas");
 
-        var busca = await _service.Livros.FindAsync(id);
+        var busca = await _service.BuscaIdAsync(id);
 
         if (busca == null)
             return NotFound($"{id} não encontrado.");
-
-        busca.Titulo = livro.Titulo;
-        busca.Autor = livro.Autor;
-        busca.Ano = livro.Ano;
-        busca.Genero = livro.Genero;
-
-        await _service.SaveChangesAsync();
-        return Ok(busca);
+        else
+            return Ok(await _service.AtualizarTudoAsync(id, busca));
     }
 
     [HttpPatch]
@@ -74,40 +65,26 @@ public class LivrosController : ControllerBase
     public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosLivro livro)
     {
 
-        var busca = await _service.Livros.FindAsync(id);
+        var busca = await _service.BuscaIdAsync(id);
 
         if (busca == null)
-        {
             return NotFound($"{id} não encontrado.");
-        }
-
-        if (livro.Autor != null)
-            busca.Autor = livro.Autor;
-
-        if (livro.Titulo != null && livro.Titulo != "")
-            busca.Titulo = livro.Titulo;
-
-        if (livro.Ano != null)
-            busca.Ano = livro.Ano;
-
-        if (livro.Genero != null)
-            busca.Genero = livro.Genero;
-
-        await _service.SaveChangesAsync();
-        return Ok(busca);
+        else
+            return Ok(_service.AtualizaParcialAsync(id, livro));
     }
 
     [HttpDelete]
 
     public async Task<ActionResult> DeleteAsync(int id)
     {
-        var busca = await _service.Livros.FindAsync(id);
-        if (busca == null)
-            return NotFound();
-        else
-            _service.Livros.Remove(busca);
+        var delete = await _service.BuscaIdAsync(id);
 
-        await _service.SaveChangesAsync();
-        return Ok(busca);
+        if (delete == null)
+            return BadRequest($"{id} não econtrado");
+        else
+        {
+            await _service.DeletarAsync(delete);
+        }
+        return Ok($"O livro \"{delete.Titulo}\" foi deletado");
     }
 }

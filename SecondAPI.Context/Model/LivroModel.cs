@@ -1,6 +1,5 @@
-namespace SecondAPI.Context.Model;
-using SecondAPI.Domain.Model;
-using static SecondAPI.Domain.Model.UsuarioModel;
+namespace SecondAPI.Domain.Model;
+
 
 public class DadosLivro
 {

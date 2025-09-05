@@ -2,9 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SecondAPI.Context.Context;
+using SecondAPI.Services.Context;
 
 
 #nullable disable
@@ -12,11 +11,9 @@ using SecondAPI.Context.Context;
 namespace SecondAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250904004753_TabelasAtualizadas")]
-    partial class TabelasAtualizadas
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
