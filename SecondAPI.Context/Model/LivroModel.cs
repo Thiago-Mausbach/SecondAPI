@@ -1,4 +1,5 @@
-namespace SecondAPI.Context.Model;
+namespace SecondAPI.Domain.Model;
+
 
 public class DadosLivro
 {
@@ -10,16 +11,6 @@ public class DadosLivro
     public int? Ano { get; set; }
 
     public string? Genero { get; set; }
-}
-
-public class DadosUsuario
-{
-    public int Id { get; set; }
-
-    public string Nome { get; set; } = null!;
-    public string? Sobrenome { get; set; }
-    public string? Telefone { get; set; }
-    public string Email { get; set; } = null!;
 }
 
 public class LivroEmprestado

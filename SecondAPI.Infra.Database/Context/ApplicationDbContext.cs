@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SecondAPI.Context.Model;
+using SecondAPI.Domain.Model;
 
-namespace SecondAPI.Context.Context;
+
+
+namespace SecondAPI.Services.Context;
 
 public class AppDbContext : DbContext
 {
