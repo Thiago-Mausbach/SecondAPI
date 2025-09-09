@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Domain", "SecondA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Infra.Database", "SecondAPI.Infra.Database\SecondAPI.Infra.Database.csproj", "{13D54CB4-789C-4696-8BAE-191686BC3E30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Interface", "SecondAPI.Interface\SecondAPI.Interface.csproj", "{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,18 @@ Global
 		{13D54CB4-789C-4696-8BAE-191686BC3E30}.Release|x64.Build.0 = Release|Any CPU
 		{13D54CB4-789C-4696-8BAE-191686BC3E30}.Release|x86.ActiveCfg = Release|Any CPU
 		{13D54CB4-789C-4696-8BAE-191686BC3E30}.Release|x86.Build.0 = Release|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Debug|x64.Build.0 = Debug|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Release|x64.ActiveCfg = Release|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Release|x64.Build.0 = Release|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{274AA5A5-1C5A-45D9-80C1-6F49BE8068D7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

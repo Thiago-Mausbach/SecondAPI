@@ -19,11 +19,11 @@ public class LivrosController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DadosLivro>>> GetAsync()
     {
-        var users = await _service.BuscaAsync();
-        if (users == null || users.Count == 0)
-            return BadRequest("Nenhum usuário");
+        var livros = await _service.BuscaAsync();
+        if (livros == null || livros.Count == 0)
+            return BadRequest("Nenhum Livro");
         else
-            return Ok(users);
+            return Ok(livros);
     }
 
     [HttpGet("{id}")]

@@ -19,7 +19,10 @@ public class UsuariosController : ControllerBase
     public async Task<ActionResult<IEnumerable<DadosUsuario>>> GetAsync()
     {
         var users = await _service.BuscaAsync();
-        return Ok(users);
+        if (users == null || users.Count == 0)
+            return BadRequest("Nenhum usuário");
+        else
+            return Ok(users);
     }
 
     [HttpGet("{id}")]

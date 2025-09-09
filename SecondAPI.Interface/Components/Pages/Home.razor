@@ -1,0 +1,31 @@
+﻿@page "/"
+@using SecondAPI.Api.ViewModel
+@using SecondAPI.Interface.ViewServices
+@inject UsuarioViewService _usuarioService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+
+<EditForm Model="@usuario" OnValidSubmit="Salvar" FormName="CadastroUsuario">
+    <InputText id= "nome" @bind-Value="usuario.Nome" placeholder="Nome" />
+    <InputText id="sobrenome" @bind-Value="usuario.Sobrenome" placeholder="Sobrenome" />
+    <InputText id="email" @bind-Value="usuario.Email" placeholder="E-mail" />
+    <InputText id="telefone" @bind-Value="usuario.Telefone" placeholder="Telefone" />
+    <InputText id="senha" @bind-Value="usuario.Senha" type="password" placeholder="Senha" />
+    <button type="submit">Salvar</button>
+</EditForm>
+
+@code {
+    private UsuarioViewModel usuario = new UsuarioViewModel();
+
+    private async Task Salvar()
+    {
+        await _usuarioService.CriarUsuarioAsync(usuario);
+        Console.WriteLine(usuario);
+
+    }
+}

@@ -8,4 +8,5 @@ public class DadosUsuario
     public string? Sobrenome { get; set; }
     public string? Telefone { get; set; }
     public string Email { get; set; } = null!;
+    public string? Senha { get; set; }
 }
