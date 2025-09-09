@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SecondAPI.Context.Context;
+using SecondAPI.Services.Context;
 
 
 #nullable disable
@@ -12,8 +12,8 @@ using SecondAPI.Context.Context;
 namespace SecondAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250902200656_Inicial")]
-    partial class Inicial
+    [Migration("20250903232516_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
