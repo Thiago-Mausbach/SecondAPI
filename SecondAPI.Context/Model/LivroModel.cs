@@ -11,6 +11,8 @@ public class DadosLivro
     public int? Ano { get; set; }
 
     public string? Genero { get; set; }
+
+    public string? Senha { get; set; }
 }
 
 public class LivroEmprestado

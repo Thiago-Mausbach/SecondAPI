@@ -1,11 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using SecondAPI.Domain.Mapping;
+using SecondAPI.Infra.Database.Context;
 using SecondAPI.Interface.Components;
 using SecondAPI.Interface.ViewServices;
+using SecondAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAutoMapper(cfg => { }, typeof(Mapping).Assembly);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSecondApiServices();
 
 builder.Services.AddScoped<UsuarioViewService>();
 builder.Services.AddScoped(sp => new HttpClient
@@ -26,6 +37,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+app.UseRouting();
 
 app.UseAntiforgery();
 

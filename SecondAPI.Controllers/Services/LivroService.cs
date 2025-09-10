@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SecondAPI.Domain.Model;
-using SecondAPI.Services.Context;
+using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services.Interfaces;
 
 namespace SecondAPI.Services.Services;

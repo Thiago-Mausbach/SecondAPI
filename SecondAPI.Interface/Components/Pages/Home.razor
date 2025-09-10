@@ -1,7 +1,11 @@
 ﻿@page "/"
-@using SecondAPI.Interface.ViewModel
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using SecondAPI.Domain.ViewModel
 @using SecondAPI.Interface.ViewServices
-@inject UsuarioViewService _usuarioViewService
+@using SecondAPI.Services.Interfaces
+@inject ILivroService LivroService
+@inject IUsuarioService UsuarioService
 
 <PageTitle>Home</PageTitle>
 
@@ -10,29 +14,38 @@
 Welcome to your new app.
 
 
-<EditForm Model="@usuario" OnValidSubmit="Cadastrar" FormName="Cadastro">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<EditForm Model="Usuario" OnSubmit="Cadastrar" FormName="Cadastro">
 
-    <InputText id="nome" @bind-Value="@usuario.Nome" placeholder="Nome" />
+    <InputText id="Nome" @bind-Value="Usuario!.Nome" />
     <br />
-    <InputText id="sobrenome" @bind-Value="@usuario.Sobrenome" placeholder="Sobrenome" />
+    <InputText id="sobrenome" @bind-Value="Usuario.Sobrenome" />
     <br />
-    <InputText id="email" type="email" @bind-Value="@usuario.Email" placeholder="E-mail" />
+    <InputText id="email" type="email" @bind-Value="Usuario.Email" />
     <br />
-    <InputText id="telefone" @bind-Value="@usuario.Telefone" placeholder="Telefone" />
+    <InputText id="telefone" @bind-Value="Usuario.Telefone"/>
     <br />
-    <InputText id="senha" @bind-Value="@usuario.Senha" type="password" placeholder="Senha" />
+    <InputText id="senha" @bind-Value="Usuario.Senha" type="password"/>
     <br />
     <button type="submit">Salvar</button>
 </EditForm>
 
 @code {
-    UsuarioViewModel usuario = new UsuarioViewModel();
+    [SupplyParameterFromForm]
+    private UsuarioViewModel? Usuario { get; set; }
 
-    public async Task Cadastrar(EditContext context)
+    [Inject]
+    private UsuarioViewService? UsuarioViewService {get; set;}
+
+    private ILivroService? livroService { get; set; }
+
+    protected override void OnInitialized() => Usuario ??= new(); 
+
+    public async Task Cadastrar()
     {
-        await _usuarioViewService.CriarUsuarioAsync(usuario);
-        Console.WriteLine($"Nome: {usuario.Nome}, Email: {usuario.Email}");
+        if (Usuario == null)
+        {
+            throw new ArgumentNullException("campos nulos");
+        }
+        Console.WriteLine(await UsuarioService.CriarUsuarioAsync(Usuario));
     }
 }

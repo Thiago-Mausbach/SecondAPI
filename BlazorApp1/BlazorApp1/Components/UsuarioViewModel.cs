@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SecondAPI.Interface.ViewModel;
+﻿namespace BlazorApp1.Components;
 
 
 public class UsuarioViewModel

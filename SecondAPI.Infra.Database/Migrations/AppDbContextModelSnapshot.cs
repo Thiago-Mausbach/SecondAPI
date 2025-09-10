@@ -3,8 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SecondAPI.Services.Context;
-
+using SecondAPI.Infra.Database.Context;
 
 #nullable disable
 
@@ -17,12 +16,12 @@ namespace SecondAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SecondAPI.Model.DadosLivro", b =>
+            modelBuilder.Entity("SecondAPI.Domain.Model.DadosLivro", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,6 +38,9 @@ namespace SecondAPI.Migrations
                     b.Property<string>("Genero")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Senha")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -48,7 +50,7 @@ namespace SecondAPI.Migrations
                     b.ToTable("Livros");
                 });
 
-            modelBuilder.Entity("SecondAPI.Model.DadosUsuario", b =>
+            modelBuilder.Entity("SecondAPI.Domain.Model.DadosUsuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,6 +64,9 @@ namespace SecondAPI.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Senha")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sobrenome")

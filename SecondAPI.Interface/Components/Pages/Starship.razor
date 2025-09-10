@@ -1,0 +1,30 @@
+﻿@page "/starship"
+
+<EditForm Model="Model" OnSubmit="Submit" FormName="Starship1">
+    <div>
+        <label>
+            Identifier:
+            <InputText @bind-Value="Model!.Id" />
+        </label>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private Starship1? Model { get; set; }
+
+    protected override void OnInitialized() => Model ??= new();
+
+    private void Submit() 
+    {
+        Console.WriteLine(Model?.Id);
+    }
+
+    public class Starship1
+    {
+        public string? Id { get; set; }
+    }
+}
