@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SecondAPI.Api\SecondAPI.Api.csproj" />
     <ProjectReference Include="..\SecondAPI.Controllers\SecondAPI.Services.csproj" />
+    <ProjectReference Include="..\SecondAPI.Infra.Database\SecondAPI.Infra.Database.csproj" />
   </ItemGroup>
 
 </Project>

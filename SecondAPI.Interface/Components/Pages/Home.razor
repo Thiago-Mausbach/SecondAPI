@@ -1,7 +1,7 @@
 ﻿@page "/"
-@using SecondAPI.Api.ViewModel
+@using SecondAPI.Interface.ViewModel
 @using SecondAPI.Interface.ViewServices
-@inject UsuarioViewService _usuarioService
+@inject UsuarioViewService _usuarioViewService
 
 <PageTitle>Home</PageTitle>
 
@@ -10,22 +10,29 @@
 Welcome to your new app.
 
 
-<EditForm Model="@usuario" OnValidSubmit="Salvar" FormName="CadastroUsuario">
-    <InputText id= "nome" @bind-Value="usuario.Nome" placeholder="Nome" />
-    <InputText id="sobrenome" @bind-Value="usuario.Sobrenome" placeholder="Sobrenome" />
-    <InputText id="email" @bind-Value="usuario.Email" placeholder="E-mail" />
-    <InputText id="telefone" @bind-Value="usuario.Telefone" placeholder="Telefone" />
-    <InputText id="senha" @bind-Value="usuario.Senha" type="password" placeholder="Senha" />
+<EditForm Model="@usuario" OnValidSubmit="Cadastrar" FormName="Cadastro">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="nome" @bind-Value="@usuario.Nome" placeholder="Nome" />
+    <br />
+    <InputText id="sobrenome" @bind-Value="@usuario.Sobrenome" placeholder="Sobrenome" />
+    <br />
+    <InputText id="email" type="email" @bind-Value="@usuario.Email" placeholder="E-mail" />
+    <br />
+    <InputText id="telefone" @bind-Value="@usuario.Telefone" placeholder="Telefone" />
+    <br />
+    <InputText id="senha" @bind-Value="@usuario.Senha" type="password" placeholder="Senha" />
+    <br />
     <button type="submit">Salvar</button>
 </EditForm>
 
 @code {
-    private UsuarioViewModel usuario = new UsuarioViewModel();
+    UsuarioViewModel usuario = new UsuarioViewModel();
 
-    private async Task Salvar()
+    public async Task Cadastrar(EditContext context)
     {
-        await _usuarioService.CriarUsuarioAsync(usuario);
-        Console.WriteLine(usuario);
-
+        await _usuarioViewService.CriarUsuarioAsync(usuario);
+        Console.WriteLine($"Nome: {usuario.Nome}, Email: {usuario.Email}");
     }
 }

@@ -1,4 +1,4 @@
-﻿using SecondAPI.Api.ViewModel;
+﻿using SecondAPI.Interface.ViewModel;
 
 namespace SecondAPI.Interface.ViewServices;
 
@@ -14,5 +14,6 @@ public class UsuarioViewService
     public async Task CriarUsuarioAsync(UsuarioViewModel usuario)
     {
         await _http.PostAsJsonAsync("API/Usuarios", usuario);
+        Console.WriteLine(usuario.Nome);
     }
 }
