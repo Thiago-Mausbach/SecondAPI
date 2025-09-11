@@ -20,7 +20,7 @@ public class LivrosController : ControllerBase
     public async Task<ActionResult<IEnumerable<DadosLivro>>> GetAsync()
     {
         var users = await _service.BuscaAsync();
-        if (users == null || users.Count == 0)
+        if (users == null)
             return BadRequest("Nenhum usuário");
         else
             return Ok(users);
