@@ -1,0 +1,50 @@
+﻿@using SecondAPI.Domain.ViewModel
+@using SecondAPI.Services.Interfaces
+@using SecondAPI.Services.ViewServices
+@inject ILivroService LivroService
+@inject IUsuarioService UsuarioService
+
+
+@page "/Cadastro"
+<PageTitle>Home</PageTitle>
+
+<h1>Bem vindo! Faça seu cadastro preenchendo os campos abaixo.</h1>
+
+
+<EditForm Model="Usuario" OnSubmit="Cadastrar" FormName="Cadastro">
+
+    <InputText id="Nome" @bind-Value="Usuario!.Nome" placeholder="Nome"/>
+    <br />
+    <InputText id="sobrenome" @bind-Value="Usuario.Sobrenome" placeholder="Sobrenome" />
+    <br />
+    <InputText id="email" type="email" @bind-Value="Usuario.Email" placeholder="Email" />
+    <br />
+    <InputText id="telefone" @bind-Value="Usuario.Telefone" placeholder="Telefone" />
+    <br />
+    <InputText id="senha" @bind-Value="Usuario.Senha" type="password" placeholder="Senha" />
+    <br />
+    <button type="submit">Salvar</button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private UsuarioViewModel? Usuario { get; set; }
+
+    [Inject]
+    private UsuarioViewService? UsuarioViewService {get; set;}
+
+    private ILivroService? livroService { get; set; }
+
+    protected override void OnInitialized() => Usuario ??= new(); 
+
+    public async Task Cadastrar()
+    {
+        if (Usuario == null)
+        {
+            throw new ArgumentNullException("campos nulos");
+        }
+        await UsuarioService.CriarUsuarioAsync(Usuario);
+        Usuario = new();
+
+    }
+}

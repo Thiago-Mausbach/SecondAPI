@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using SecondAPI.Domain.Mapping;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 using SecondAPI.Services.Services;
+using SecondAPI.Services.ViewServices;
 
 namespace SecondAPI.Services
 {
@@ -10,11 +12,32 @@ namespace SecondAPI.Services
     {
         public static IServiceCollection AddSecondApiServices(this IServiceCollection services)
         {
-
             //  -------Builder para testes locais---------- -
             //services.AddDbContext<AppDbContext>(options =>
             //options.UseInMemoryDatabase(("DefaultConnection")));
+            services.AddHttpContextAccessor();
 
+            services.AddAutoMapper(cfg => { }, typeof(Mapping).Assembly);
+            services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+            services.AddCascadingAuthenticationState();
+            services.AddAuthorization();
+            services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/login";
+    });
+
+
+            services.AddScoped<UsuarioViewService>();
+            services.AddScoped(sp => new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7146/")
+            });
+
+            services.AddScoped<UsuarioViewService>();
             services.AddScoped<IPasswordHasher<DadosUsuario>, PasswordHasher<DadosUsuario>>();
             services.AddScoped<ILivroService, LivroService>();
             services.AddScoped<IUsuarioService, UsuarioService>();

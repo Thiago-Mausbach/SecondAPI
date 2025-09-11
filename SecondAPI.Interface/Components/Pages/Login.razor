@@ -1,0 +1,74 @@
+﻿@page "/login"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authentication
+@using SecondAPI.Domain.ViewModel
+@using SecondAPI.Services.Interfaces
+@using SecondAPI.Services.ViewServices
+@using System.Security.Claims
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IUsuarioService UsuarioService
+
+<PageTitle>Login</PageTitle>
+
+<h1>Faça seu login</h1>
+
+<EditForm Model="Usuario" OnSubmit="Logar" FormName="Login">
+
+
+    <InputText id="Email" @bind-Value="Usuario!.Email" placeholder="E-mail"/>
+    <ValidationMessage For="@(() => Usuario.Email)" />
+    <br />
+    <InputText type="password" id="Senha" @bind-Value="Usuario.Senha" placeholder="Senha" />
+    <ValidationMessage For="@(() => Usuario.Senha)" />
+    <br />
+        <button type="submit" class="btn btn-primary">Login</button>
+    </EditForm>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private UsuarioViewModel? Usuario { get; set; } = new();
+
+    private async Task Validar()
+    {
+        var login = await UsuarioService.ValidarLoginAsync(Usuario);
+        if (login == Usuario)
+        {
+            Console.WriteLine($"Login realizado: {Usuario.Email}");
+            NavigationManager.NavigateTo("/Home");
+        }
+        else
+        {
+            Usuario.Senha = string.Empty;
+            Usuario.Email = string.Empty;
+        }
+
+    }
+
+    private async Task Logar()
+    {
+        var login = await UsuarioService.ValidarLoginAsync(Usuario);
+
+        if (login != null)
+        {
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, login.Email),
+            new Claim("UserId", login.Id.ToString()) 
+        };
+
+            var identity = new ClaimsIdentity(claims, "Cookies");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContextAccessor.HttpContext!.SignInAsync("Cookies", principal);
+
+            NavigationManager.NavigateTo(uri: "/Home", forceLoad: true, replace: false);
+        }
+        else
+        {
+            Usuario.Email = string.Empty;
+            Usuario.Senha = string.Empty;
+        }
+    }
+}

@@ -100,4 +100,17 @@ public class UsuarioService : IUsuarioService
 
         return _mapper.Map<UsuarioViewModel>(usuario);
     }
+
+    public async Task<UsuarioViewModel> ValidarLoginAsync(UsuarioViewModel usuario)
+    {
+        var user = await _context.Usuarios
+           .FirstOrDefaultAsync(u => u.Email == usuario.Email);
+        //user = _mapper.Map<DadosUsuario>(usuario);
+
+        if (usuario == null) return null;
+        if (usuario.Senha != user.Senha) return null;
+
+        return usuario;
+    }
 }
+

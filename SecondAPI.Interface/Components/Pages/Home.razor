@@ -1,53 +1,10 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.AspNetCore.Components.Web
-@using SecondAPI.Domain.ViewModel
-@using SecondAPI.Interface.ViewServices
-@using SecondAPI.Services.Interfaces
-@inject ILivroService LivroService
-@inject IUsuarioService UsuarioService
+<PageTitle>Início</PageTitle>
+<h3>Home</h3>
 
-<PageTitle>Home</PageTitle>
+@attribute [Authorize]
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-
-<EditForm Model="Usuario" OnSubmit="Cadastrar" FormName="Cadastro">
-
-    <InputText id="Nome" @bind-Value="Usuario!.Nome" />
-    <br />
-    <InputText id="sobrenome" @bind-Value="Usuario.Sobrenome" />
-    <br />
-    <InputText id="email" type="email" @bind-Value="Usuario.Email" />
-    <br />
-    <InputText id="telefone" @bind-Value="Usuario.Telefone"/>
-    <br />
-    <InputText id="senha" @bind-Value="Usuario.Senha" type="password"/>
-    <br />
-    <button type="submit">Salvar</button>
-</EditForm>
-
+@* TODO -- LANÇAR A INCLUSÃO DE LIVRO E TUDO MAIS AQUI *@
 @code {
-    [SupplyParameterFromForm]
-    private UsuarioViewModel? Usuario { get; set; }
 
-    [Inject]
-    private UsuarioViewService? UsuarioViewService {get; set;}
-
-    private ILivroService? livroService { get; set; }
-
-    protected override void OnInitialized() => Usuario ??= new(); 
-
-    public async Task Cadastrar()
-    {
-        if (Usuario == null)
-        {
-            throw new ArgumentNullException("campos nulos");
-        }
-        await UsuarioService.CriarUsuarioAsync(Usuario);
-        Usuario = new();
-
-    }
 }

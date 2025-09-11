@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecondAPI.Domain.Model;
+using SecondAPI.Domain.ViewModel;
 using SecondAPI.Services.Interfaces;
 
 namespace SecondAPI.Api.Controllers;
@@ -85,5 +86,16 @@ public class UsuariosController : ControllerBase
             await _service.DeletarAsync(id);
             return Ok($"O usuário foi deletado");
         }
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UsuarioViewModel model)
+    {
+        var usuario = await _service.ValidarLoginAsync(model);
+
+        if (usuario == null)
+            return Unauthorized("Credenciais inválidas");
+
+        return Ok(new { message = "Login válido!", usuario.Email });
     }
 }

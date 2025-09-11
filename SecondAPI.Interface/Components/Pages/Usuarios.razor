@@ -1,12 +1,21 @@
-﻿@page "/usuarios"
-@rendermode InteractiveServer
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.AspNetCore.Components.Web
+﻿@rendermode InteractiveServer
 @using SecondAPI.Domain.Model
 @using SecondAPI.Domain.ViewModel
 @using SecondAPI.Services.Interfaces
 @inject ILivroService LivroService
 @inject IUsuarioService UsuarioService
+
+@page "/usuarios"
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Bem-vindo, @context.User.Identity.Name!</h3>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Você não está logado</h3>
+    </NotAuthorized>
+</AuthorizeView>
 
 <h3>Lista de Usuários</h3>
 

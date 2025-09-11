@@ -1,6 +1,7 @@
 ﻿using SecondAPI.Domain.ViewModel;
+using System.Net.Http.Json;
 
-namespace SecondAPI.Interface.ViewServices;
+namespace SecondAPI.Services.ViewServices;
 
 public class UsuarioViewService
 {
