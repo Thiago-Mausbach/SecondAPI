@@ -1,0 +1,124 @@
+﻿@page "/usuarios"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using SecondAPI.Domain.Model
+@using SecondAPI.Domain.ViewModel
+@using SecondAPI.Services.Interfaces
+@inject ILivroService LivroService
+@inject IUsuarioService UsuarioService
+
+<h3>Lista de Usuários</h3>
+
+<button @onclick="BuscarUsuarios" class="btn btn-sm btn-primary">Listar Usuários</button>
+
+@if (usuarios == null)
+{
+    <p>Clique no botão para carregar os usuários.</p>
+}
+else if (usuarios.Count == 0)
+{
+    <p>Nenhum usuário encontrado.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in usuarios)
+            {
+                <tr>
+                    <td>@u.Nome</td>
+                    <td>@u.Sobrenome</td>
+                    <td>@u.Email</td>
+                    <td>@u.Telefone</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" type="button" @onclick="() => EditarUsuario(u)">
+                            Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger" type="button" @onclick="() => ExcluirUsuario(u)">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (usuarioEdicao != null)
+{
+    <h4>Editar Usuário</h4>
+    <EditForm Model="@usuarioEdicao" OnValidSubmit="SalvarEdicao">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-2">
+            <label>Nome:</label>
+            <InputText class="form-control" @bind-Value="usuarioEdicao.Nome" />
+        </div>
+        <div class="mb-2">
+            <label>Sobrenome:</label>
+            <InputText class="form-control" @bind-Value="usuarioEdicao.Sobrenome" />
+        </div>
+        <div class="mb-2">
+            <label>Email:</label>
+            <InputText class="form-control" @bind-Value="usuarioEdicao.Email" />
+        </div>
+        <div class="mb-2">
+            <label>Telefone:</label>
+            <InputText class="form-control" @bind-Value="usuarioEdicao.Telefone" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <button type="button" class="btn btn-secondary" @onclick="CancelarEdicao">Cancelar</button>
+    </EditForm>
+}
+
+@code {
+    private List<DadosUsuario>? usuarios;
+    private DadosUsuario? usuarioEdicao;
+
+    private async Task BuscarUsuarios()
+    {
+        usuarios = await UsuarioService.BuscaAsync();
+    }
+
+    private async Task EditarUsuario(DadosUsuario u)
+    {
+        usuarioEdicao = new DadosUsuario
+            {
+                Id = u.Id,
+                Nome = u.Nome,
+                Sobrenome = u.Sobrenome,
+                Email = u.Email,
+                Telefone = u.Telefone
+            };
+
+    }
+
+    private async Task SalvarEdicao()
+    {
+        await UsuarioService.AtualizaParcialAsync(usuarioEdicao!.Id, usuarioEdicao);
+        usuarioEdicao = null;
+    }
+
+    private void CancelarEdicao()
+    {
+        usuarioEdicao = null;
+    }
+
+    private async Task ExcluirUsuario(DadosUsuario u)
+    {
+        await UsuarioService.DeletarAsync(u.Id);
+        await BuscarUsuarios();
+    }
+}

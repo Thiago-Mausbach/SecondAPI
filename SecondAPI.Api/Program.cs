@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using SecondAPI.Api.Controllers;
-using SecondAPI.Services.Context;
-using SecondAPI.Services.Interfaces;
-using SecondAPI.Services.Services;
-
+using SecondAPI.Domain.Mapping;
+using SecondAPI.Infra.Database.Context;
+using SecondAPI.Services;
 namespace SecondAPI.Api;
 
 public class Program
@@ -13,8 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //builder.Services.AddDbContext<AppDbContext>(options =>
-        //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddAutoMapper(cfg => { }, typeof(Mapping).Assembly);
 
 
         builder.Services.AddControllers()
@@ -24,10 +22,9 @@ public class Program
                    apm.ApplicationParts.Add(new AssemblyPart(typeof(LivrosController).Assembly));
                });
 
-        //  -------Builder para testes locais---------- -
-        builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseInMemoryDatabase(("DefaultConnection")));
 
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddCors(options =>
         {
@@ -40,8 +37,7 @@ public class Program
             });
         });
 
-        builder.Services.AddScoped<ILivroService, LivroService>();
-        builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+        builder.Services.AddSecondApiServices();
 
         builder.Services.AddControllers();
 

@@ -19,7 +19,10 @@ public class UsuariosController : ControllerBase
     public async Task<ActionResult<IEnumerable<DadosUsuario>>> GetAsync()
     {
         var users = await _service.BuscaAsync();
-        return Ok(users);
+        if (users == null || users.Count == 0)
+            return BadRequest("Nenhum usuário");
+        else
+            return Ok(users);
     }
 
     [HttpGet("{id}")]
@@ -35,10 +38,10 @@ public class UsuariosController : ControllerBase
 
     [HttpPost]
 
-    public async Task<ActionResult> PostAsync([FromBody] List<DadosUsuario> users)
+    public async Task<ActionResult> PostAsync([FromBody] DadosUsuario user)
     {
 
-        await _service.CriarAsync(users);
+        await _service.CriarAsync(user);
         return Created("", "");
     }
 

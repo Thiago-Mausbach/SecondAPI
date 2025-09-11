@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SecondAPI.Domain.Model;
-using SecondAPI.Services.Context;
+using SecondAPI.Domain.ViewModel;
+using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services.Interfaces;
 
 namespace SecondAPI.Services.Services;
@@ -8,9 +11,11 @@ namespace SecondAPI.Services.Services;
 public class UsuarioService : IUsuarioService
 {
     private readonly AppDbContext _context;
-    public UsuarioService(AppDbContext context)
+    private readonly IMapper _mapper;
+    private readonly PasswordHasher<DadosUsuario> _passwordHasher = new();
+    public UsuarioService(AppDbContext context, IMapper mapper)
     {
-
+        _mapper = mapper;
         _context = context;
     }
 
@@ -25,11 +30,11 @@ public class UsuarioService : IUsuarioService
         return busca;
     }
 
-    public async Task<List<DadosUsuario>> CriarAsync(List<DadosUsuario> users)
+    public async Task<DadosUsuario> CriarAsync(DadosUsuario user)
     {
-        _context.Usuarios.AddRange(users);
+        user.Senha = _passwordHasher.HashPassword(user, user.Senha!);
         await _context.SaveChangesAsync();
-        return users;
+        return user;
     }
 
     public async Task<DadosUsuario> AtualizarTudoAsync(int id, DadosUsuario user)
@@ -84,5 +89,15 @@ public class UsuarioService : IUsuarioService
 
         await _context.SaveChangesAsync();
         return;
+    }
+    public async Task<UsuarioViewModel> CriarUsuarioAsync(UsuarioViewModel usuarioVm)
+    {
+        var usuario = _mapper.Map<DadosUsuario>(usuarioVm);
+
+        usuario.Senha = _passwordHasher.HashPassword(usuario, usuario.Senha!);
+        _context.Usuarios.Add(usuario);
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<UsuarioViewModel>(usuario);
     }
 }
