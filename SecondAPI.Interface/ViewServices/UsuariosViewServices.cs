@@ -14,6 +14,5 @@ public class UsuarioViewService
     public async Task CriarUsuario(UsuarioViewModel usuario)
     {
         await _http.PostAsJsonAsync("API/Usuarios", usuario);
-        Console.WriteLine(usuario.Nome);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 using SecondAPI.Services.Services;
 
@@ -13,6 +15,7 @@ namespace SecondAPI.Services
             //services.AddDbContext<AppDbContext>(options =>
             //options.UseInMemoryDatabase(("DefaultConnection")));
 
+            services.AddScoped<IPasswordHasher<DadosUsuario>, PasswordHasher<DadosUsuario>>();
             services.AddScoped<ILivroService, LivroService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             return services;

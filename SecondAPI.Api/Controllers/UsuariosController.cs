@@ -38,10 +38,10 @@ public class UsuariosController : ControllerBase
 
     [HttpPost]
 
-    public async Task<ActionResult> PostAsync([FromBody] List<DadosUsuario> users)
+    public async Task<ActionResult> PostAsync([FromBody] DadosUsuario user)
     {
 
-        await _service.CriarAsync(users);
+        await _service.CriarAsync(user);
         return Created("", "");
     }
 

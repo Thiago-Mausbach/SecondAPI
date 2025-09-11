@@ -46,6 +46,8 @@ Welcome to your new app.
         {
             throw new ArgumentNullException("campos nulos");
         }
-        Console.WriteLine(await UsuarioService.CriarUsuarioAsync(Usuario));
+        await UsuarioService.CriarUsuarioAsync(Usuario);
+        Usuario = new();
+
     }
 }

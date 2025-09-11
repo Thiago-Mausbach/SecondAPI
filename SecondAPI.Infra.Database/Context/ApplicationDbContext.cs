@@ -21,7 +21,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     public AppDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseSqlServer("Server=localhost,1433;Database=Biblioteca;User Id=sa;Password=Biblioteca@123;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=Biblioteca;User Id=sa;Password=Biblioteca@123;TrustServerCertificate=True;");
 
         return new AppDbContext(optionsBuilder.Options);
     }
