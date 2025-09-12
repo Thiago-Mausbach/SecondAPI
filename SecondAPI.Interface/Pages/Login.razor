@@ -1,18 +1,25 @@
 ﻿@page "/login"
-@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
 @using SecondAPI.Domain.ViewModel
 @using SecondAPI.Services.Interfaces
 @using SecondAPI.Services.ViewServices
 @using System.Security.Claims
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IUsuarioService UsuarioService
+@inject HttpClient HttpClient
+
 
 <PageTitle>Login</PageTitle>
 
 <h1>Faça seu login</h1>
-
+<br /> 
+<p>Ainda não tem um acesso? Clique <a href="/Cadastro">aqui</a> e faça seu cadastro</p>
 <EditForm Model="Usuario" OnSubmit="Logar" FormName="Login">
 
 
@@ -24,7 +31,6 @@
     <br />
         <button type="submit" class="btn btn-primary">Login</button>
     </EditForm>
-
 
 @code {
     [SupplyParameterFromForm]
@@ -48,27 +54,30 @@
 
     private async Task Logar()
     {
+
         var login = await UsuarioService.ValidarLoginAsync(Usuario);
 
         if (login != null)
         {
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, login.Email),
-            new Claim("UserId", login.Id.ToString()) 
-        };
+            {
+                new Claim(ClaimTypes.Name, login.Nome),
+                new Claim(ClaimTypes.Surname, login.Sobrenome),
+                new Claim(ClaimTypes.Email, login.Email),
+                new Claim("UserId", login.Id.ToString())
+            };
 
             var identity = new ClaimsIdentity(claims, "Cookies");
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContextAccessor.HttpContext!.SignInAsync("Cookies", principal);
+            await HttpContextAccessor.HttpContext.SignInAsync("Cookies", principal);
 
-            NavigationManager.NavigateTo(uri: "/Home", forceLoad: true, replace: false);
+            NavigationManager.NavigateTo("/", true);
         }
         else
         {
-            Usuario.Email = string.Empty;
-            Usuario.Senha = string.Empty;
+            Usuario.Email = "";
+            Usuario.Senha = string.Empty ;
         }
     }
 }

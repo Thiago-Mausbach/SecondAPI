@@ -1,4 +1,6 @@
-﻿@rendermode InteractiveServer
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
 @using SecondAPI.Domain.Model
 @using SecondAPI.Domain.ViewModel
 @using SecondAPI.Services.Interfaces
@@ -6,19 +8,14 @@
 @inject IUsuarioService UsuarioService
 
 @page "/usuarios"
-@attribute [Authorize]
 
 <AuthorizeView>
     <Authorized>
-        <h3>Bem-vindo, @context.User.Identity.Name!</h3>
-    </Authorized>
-    <NotAuthorized>
-        <h3>Você não está logado</h3>
-    </NotAuthorized>
-</AuthorizeView>
+        <h3>Olá, @context.User.Identity.Name!</h3>
+
 
 <h3>Lista de Usuários</h3>
-
+<br>
 <button @onclick="BuscarUsuarios" class="btn btn-sm btn-primary">Listar Usuários</button>
 
 @if (usuarios == null)
@@ -63,6 +60,12 @@ else
     </table>
 }
 
+    </Authorized>
+    <NotAuthorized>
+        <p>Você não está logado faça seu login <a href="/login">aqui</a>. Caso não tenha login, cadastre-se <a href="/cadastro">aqui</a></p>
+    </NotAuthorized>
+</AuthorizeView>
+
 @if (usuarioEdicao != null)
 {
     <h4>Editar Usuário</h4>
@@ -93,6 +96,7 @@ else
 }
 
 @code {
+
     private List<DadosUsuario>? usuarios;
     private DadosUsuario? usuarioEdicao;
 

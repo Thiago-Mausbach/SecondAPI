@@ -105,12 +105,12 @@ public class UsuarioService : IUsuarioService
     {
         var user = await _context.Usuarios
            .FirstOrDefaultAsync(u => u.Email == usuario.Email);
-        //user = _mapper.Map<DadosUsuario>(usuario);
 
         if (usuario == null) return null;
         if (usuario.Senha != user.Senha) return null;
 
-        return usuario;
+        var resultado = _mapper.Map<UsuarioViewModel>(user);
+        return resultado;
     }
 }
 

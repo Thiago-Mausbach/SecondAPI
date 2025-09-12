@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Authentication
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
@@ -6,10 +7,17 @@
     </div>
 
     <main>
+    
+        <AuthorizeView>
+            <Authorized>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <button @onclick="Deslogar" class="btn btn-sm btn-primary">Sair</button>
         </div>
+            </Authorized>
+            <NotAuthorized>
 
+            </NotAuthorized>
+        </AuthorizeView>
         <article class="content px-4">
             @Body
         </article>
@@ -21,3 +29,14 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    [Inject] IHttpContextAccessor HttpContextAccessor { get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; }
+
+    private async Task Deslogar()
+    {
+        await HttpContextAccessor.HttpContext!.SignOutAsync("Cookies");
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}

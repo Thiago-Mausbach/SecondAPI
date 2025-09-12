@@ -1,4 +1,6 @@
-﻿@using SecondAPI.Domain.ViewModel
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using SecondAPI.Domain.ViewModel
 @using SecondAPI.Services.Interfaces
 @using SecondAPI.Services.ViewServices
 @inject ILivroService LivroService
@@ -9,22 +11,33 @@
 <PageTitle>Home</PageTitle>
 
 <h1>Bem vindo! Faça seu cadastro preenchendo os campos abaixo.</h1>
+<br />
 
 
 <EditForm Model="Usuario" OnSubmit="Cadastrar" FormName="Cadastro">
 
     <InputText id="Nome" @bind-Value="Usuario!.Nome" placeholder="Nome"/>
-    <br />
+    <br /> <br />
     <InputText id="sobrenome" @bind-Value="Usuario.Sobrenome" placeholder="Sobrenome" />
-    <br />
+    <br /> <br />
     <InputText id="email" type="email" @bind-Value="Usuario.Email" placeholder="Email" />
-    <br />
+    <br /> <br />
     <InputText id="telefone" @bind-Value="Usuario.Telefone" placeholder="Telefone" />
-    <br />
+    <br /> <br />
     <InputText id="senha" @bind-Value="Usuario.Senha" type="password" placeholder="Senha" />
-    <br />
+    <br /> <br />
     <button type="submit">Salvar</button>
 </EditForm>
+
+@if (cadastroRealizado == true)
+{
+    <p>Cadastro realizado! Clique <a href="/login"> aqui </a> para fazer seu login</p>
+}
+
+@if (camposVazios == true)
+{
+    <p>Campos obrigatórios estão em branco! Preencha ao menos nome, e-mail e senha.</p>
+}
 
 @code {
     [SupplyParameterFromForm]
@@ -33,18 +46,21 @@
     [Inject]
     private UsuarioViewService? UsuarioViewService {get; set;}
 
-    private ILivroService? livroService { get; set; }
-
-    protected override void OnInitialized() => Usuario ??= new(); 
+    protected override void OnInitialized() => Usuario ??= new();
+    bool camposVazios;
+    bool cadastroRealizado;
 
     public async Task Cadastrar()
     {
-        if (Usuario == null)
+        if (Usuario.Nome == "" || Usuario.Email == "" || Usuario.Senha == "")
         {
-            throw new ArgumentNullException("campos nulos");
+            camposVazios = true;
         }
+        else
+        {
         await UsuarioService.CriarUsuarioAsync(Usuario);
+        cadastroRealizado = true;          
+        }
         Usuario = new();
-
     }
 }

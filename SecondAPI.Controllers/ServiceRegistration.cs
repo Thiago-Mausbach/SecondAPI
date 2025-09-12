@@ -15,11 +15,8 @@ namespace SecondAPI.Services
             //  -------Builder para testes locais---------- -
             //services.AddDbContext<AppDbContext>(options =>
             //options.UseInMemoryDatabase(("DefaultConnection")));
-            services.AddHttpContextAccessor();
 
             services.AddAutoMapper(cfg => { }, typeof(Mapping).Assembly);
-            services.AddRazorComponents()
-    .AddInteractiveServerComponents();
 
             services.AddCascadingAuthenticationState();
             services.AddAuthorization();
@@ -27,15 +24,7 @@ namespace SecondAPI.Services
     .AddCookie("Cookies", options =>
     {
         options.LoginPath = "/login";
-        options.AccessDeniedPath = "/login";
     });
-
-
-            services.AddScoped<UsuarioViewService>();
-            services.AddScoped(sp => new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7146/")
-            });
 
             services.AddScoped<UsuarioViewService>();
             services.AddScoped<IPasswordHasher<DadosUsuario>, PasswordHasher<DadosUsuario>>();

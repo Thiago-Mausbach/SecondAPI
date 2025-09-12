@@ -1,0 +1,29 @@
+﻿@page "/"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Web
+@inject AuthenticationStateProvider AuthStateProvider
+<PageTitle>Início</PageTitle>
+<h3>Home</h3>
+
+
+
+    <AuthorizeView>
+        <Authorized>
+            <h3>Bem-vindo, @context.User.Identity.Name!</h3>
+        </Authorized>
+        <NotAuthorized>
+            <p>Você não está logado. Faça seu login <a href= "/login">aqui</a>. Caso não tenha um cadastro ainda, clique <a href="/cadastro">aqui</a></p>
+        </NotAuthorized>
+    </AuthorizeView>
+
+@code {
+    private ClaimsPrincipal? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+        user = state.User;
+    }
+}
