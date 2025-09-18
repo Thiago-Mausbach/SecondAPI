@@ -42,8 +42,9 @@ public class UsuariosController : ControllerBase
     public async Task<ActionResult> PostAsync([FromBody] DadosUsuario user)
     {
 
-        await _service.CriarAsync(user);
-        return Created("", "");
+        var novoUsuario = await _service.CriarAsync(user);
+        novoUsuario.Senha = null;
+        return CreatedAtAction(nameof(PostAsync), new { id = novoUsuario.Id }, novoUsuario);
     }
 
     [HttpPut("{id}")]
@@ -86,16 +87,5 @@ public class UsuariosController : ControllerBase
             await _service.DeletarAsync(id);
             return Ok($"O usuário foi deletado");
         }
-    }
-
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UsuarioViewModel model)
-    {
-        var usuario = await _service.ValidarLoginAsync(model);
-
-        if (usuario == null)
-            return Unauthorized("Credenciais inválidas");
-
-        return Ok(new { message = "Login válido!", usuario.Email });
     }
 }

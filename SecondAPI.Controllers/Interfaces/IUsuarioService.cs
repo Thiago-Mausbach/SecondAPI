@@ -11,7 +11,4 @@ public interface IUsuarioService
     Task<DadosUsuario> AtualizarTudoAsync(int id, DadosUsuario user);
     Task<DadosUsuario> AtualizaParcialAsync(int id, DadosUsuario user);
     Task DeletarAsync(int id);
-    Task<UsuarioViewModel> CriarUsuarioAsync(UsuarioViewModel usuarioVm);
-
-    Task<UsuarioViewModel> ValidarLoginAsync(UsuarioViewModel usuario);
 }
