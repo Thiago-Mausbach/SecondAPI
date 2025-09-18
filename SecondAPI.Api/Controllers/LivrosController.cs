@@ -73,7 +73,7 @@ public class LivrosController : ControllerBase
             return Ok(_service.AtualizaParcialAsync(id, livro));
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
 
     public async Task<ActionResult> DeleteAsync(int id)
     {
