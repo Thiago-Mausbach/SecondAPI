@@ -6,5 +6,11 @@ export default defineConfig({
     plugins: [plugin()],
     server: {
         port: 54647,
+        configureServer(server) {
+            server.middlewares.use((req, res, next) => {
+                res.setHeader('Content-Type', 'text/html; charset=utf-8')
+                next()
+            })
+        }
     }
 })

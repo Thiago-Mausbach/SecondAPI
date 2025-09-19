@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Domain", "SecondA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondAPI.Infra.Database", "SecondAPI.Infra.Database\SecondAPI.Infra.Database.csproj", "{13D54CB4-789C-4696-8BAE-191686BC3E30}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "secondapi.web", "SecondAPI.Web\secondapi.web.esproj", "{3CD6C691-F793-10DF-2A2B-6922DBAD9452}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Secondapi.Web", "SecondAPI.Web\Secondapi.Web.esproj", "{3CD6C691-F793-10DF-2A2B-6922DBAD9452}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
