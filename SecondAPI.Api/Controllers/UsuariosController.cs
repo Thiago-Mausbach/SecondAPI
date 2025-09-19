@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecondAPI.Domain.Model;
+using SecondAPI.Domain.ViewModel;
 using SecondAPI.Services.Interfaces;
 
 namespace SecondAPI.Api.Controllers;
@@ -41,8 +42,9 @@ public class UsuariosController : ControllerBase
     public async Task<ActionResult> PostAsync([FromBody] DadosUsuario user)
     {
 
-        await _service.CriarAsync(user);
-        return Created("", "");
+        var novoUsuario = await _service.CriarAsync(user);
+        novoUsuario.Senha = null;
+        return CreatedAtAction(nameof(PostAsync), new { id = novoUsuario.Id }, novoUsuario);
     }
 
     [HttpPut("{id}")]

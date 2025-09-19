@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using SecondAPI.Api.Controllers;
-using SecondAPI.Domain.Mapping;
 using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services;
 namespace SecondAPI.Api;
@@ -11,8 +10,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddAutoMapper(cfg => { }, typeof(Mapping).Assembly);
 
 
         builder.Services.AddControllers()

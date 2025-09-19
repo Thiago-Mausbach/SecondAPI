@@ -11,11 +11,9 @@ namespace SecondAPI.Services.Services;
 public class UsuarioService : IUsuarioService
 {
     private readonly AppDbContext _context;
-    private readonly IMapper _mapper;
     private readonly PasswordHasher<DadosUsuario> _passwordHasher = new();
-    public UsuarioService(AppDbContext context, IMapper mapper)
+    public UsuarioService(AppDbContext context)
     {
-        _mapper = mapper;
         _context = context;
     }
 
@@ -33,6 +31,7 @@ public class UsuarioService : IUsuarioService
     public async Task<DadosUsuario> CriarAsync(DadosUsuario user)
     {
         user.Senha = _passwordHasher.HashPassword(user, user.Senha!);
+        _context.Usuarios.Add(user);
         await _context.SaveChangesAsync();
         return user;
     }
@@ -90,14 +89,5 @@ public class UsuarioService : IUsuarioService
         await _context.SaveChangesAsync();
         return;
     }
-    public async Task<UsuarioViewModel> CriarUsuarioAsync(UsuarioViewModel usuarioVm)
-    {
-        var usuario = _mapper.Map<DadosUsuario>(usuarioVm);
-
-        usuario.Senha = _passwordHasher.HashPassword(usuario, usuario.Senha!);
-        _context.Usuarios.Add(usuario);
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<UsuarioViewModel>(usuario);
-    }
 }
+

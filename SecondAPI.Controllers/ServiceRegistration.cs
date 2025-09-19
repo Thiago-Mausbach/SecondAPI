@@ -10,7 +10,6 @@ namespace SecondAPI.Services
     {
         public static IServiceCollection AddSecondApiServices(this IServiceCollection services)
         {
-
             //  -------Builder para testes locais---------- -
             //services.AddDbContext<AppDbContext>(options =>
             //options.UseInMemoryDatabase(("DefaultConnection")));
