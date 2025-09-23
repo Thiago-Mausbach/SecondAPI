@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -62,7 +62,8 @@ function App() {
     const requestPost = async () => {
         livroSelecionado.ano = parseInt(livroSelecionado.ano);
         await axios.post(baseUrl, [livroSelecionado])
-            .then(() => {
+            .then(response => {
+                setData(data.concat(response.data));
                 requestGet();
                 abrirFecharModalIncluir();
             }).catch(error => {

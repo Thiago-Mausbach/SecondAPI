@@ -50,14 +50,9 @@ public class LivrosController : ControllerBase
     public async Task<ActionResult> PutAsync(int id, [FromBody] DadosLivro livro)
     {
         if (livro == null)
-            return BadRequest("Informãções do livro inválidas");
-
-        var busca = await _service.BuscaIdAsync(id);
-
-        if (busca == null)
-            return NotFound($"{id} não encontrado.");
+            return BadRequest("Informãções do livro inválidas ou livro não encontrado");
         else
-            return Ok(await _service.AtualizarTudoAsync(id, busca));
+            return Ok(await _service.AtualizarTudoAsync(livro.Id, livro));
     }
 
     [HttpPatch]
@@ -65,12 +60,10 @@ public class LivrosController : ControllerBase
     public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosLivro livro)
     {
 
-        var busca = await _service.BuscaIdAsync(id);
-
-        if (busca == null)
+        if (livro == null)
             return NotFound($"{id} não encontrado.");
         else
-            return Ok(_service.AtualizaParcialAsync(id, livro));
+            return Ok(await _service.AtualizaParcialAsync(id, livro));
     }
 
     [HttpDelete("{id}")]
