@@ -21,8 +21,8 @@ public class LivroService : ILivroService
 
     public async Task<DadosLivro?> BuscaIdAsync(int id)
     {
-        var livro = await _context.Livros.FindAsync(id);
-        return livro;
+        var busca = await _context.Livros.FindAsync(id);
+        return busca;
     }
 
     public async Task<List<DadosLivro>> CriarAsync(List<DadosLivro> livros)

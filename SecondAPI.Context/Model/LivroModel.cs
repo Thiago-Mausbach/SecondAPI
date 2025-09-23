@@ -1,4 +1,4 @@
-namespace SecondAPI.Domain.Model;
+﻿namespace SecondAPI.Domain.Model;
 
 
 public class DadosLivro

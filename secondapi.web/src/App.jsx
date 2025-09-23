@@ -62,7 +62,8 @@ function App() {
     const requestPost = async () => {
         livroSelecionado.ano = parseInt(livroSelecionado.ano);
         await axios.post(baseUrl, [livroSelecionado])
-            .then(() => {
+            .then(response => {
+                setData(data.concat(response.data));
                 requestGet();
                 abrirFecharModalIncluir();
             }).catch(error => {
