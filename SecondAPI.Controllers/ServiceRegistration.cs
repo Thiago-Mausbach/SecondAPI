@@ -17,6 +17,8 @@ namespace SecondAPI.Services
             services.AddScoped<IPasswordHasher<DadosUsuario>, PasswordHasher<DadosUsuario>>();
             services.AddScoped<ILivroService, LivroService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IAuthService, AuthService>();
+
             return services;
         }
     }

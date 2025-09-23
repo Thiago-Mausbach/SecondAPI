@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
+﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using SecondAPI.Api.Controllers;
 using SecondAPI.Infra.Database.Context;
@@ -11,6 +11,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+            .Build();
 
         builder.Services.AddControllers()
                .ConfigureApplicationPartManager(apm =>
