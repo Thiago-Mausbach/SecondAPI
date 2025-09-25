@@ -76,7 +76,7 @@ public class LivrosController : ControllerBase
             return BadRequest($"{id} não econtrado");
         else
         {
-            await _service.DeletarAsync(delete);
+            await _service.DeletarAsync(delete.Id, delete);
         }
         return Ok($"O livro \"{delete.Titulo}\" foi deletado");
     }

@@ -1,6 +1,5 @@
 ﻿namespace SecondAPI.Domain.Model;
 
-
 public class DadosLivro
 {
     public int Id { get; set; }
@@ -11,6 +10,10 @@ public class DadosLivro
     public int? Ano { get; set; }
 
     public string? Genero { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public DateTimeOffset? DeletedAt { get; set; }
 
 }
 
@@ -25,4 +28,7 @@ public class LivroEmprestado
     public DadosUsuario Id { get; set; } = null!;
     public DadosUsuario Nome { get; set; } = null!;
     public DadosUsuario Email { get; set; } = null!;
+    public bool IsDeleted { get; set; }
+
+    public DateTimeOffset? DeletedAt { get; set; }
 }

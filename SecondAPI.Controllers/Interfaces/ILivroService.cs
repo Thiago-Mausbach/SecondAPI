@@ -9,5 +9,5 @@ public interface ILivroService
     Task<List<DadosLivro>> CriarAsync(List<DadosLivro> livros);
     Task<DadosLivro> AtualizarTudoAsync(int id, DadosLivro livro);
     Task<DadosLivro> AtualizaParcialAsync(int id, DadosLivro livro);
-    Task<DadosLivro> DeletarAsync(DadosLivro livro);
+    Task<DadosLivro> DeletarAsync(int id, DadosLivro livro);
 }

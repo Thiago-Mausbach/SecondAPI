@@ -180,7 +180,7 @@ function App() {
                         <div className="form-group">
                             <label>ID: </label>
                             <br />
-                            <input type="text" className="form-control" value={livroSelecionado.id} readOnly />
+                            <input type="text" className="form-control" value={livroSelecionado.id} readOnly disabled />
                             <br />
                             <label>Titulo: </label>
                             <br />

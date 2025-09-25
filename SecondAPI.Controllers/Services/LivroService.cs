@@ -16,17 +16,27 @@ public class LivroService : ILivroService
 
     public async Task<List<DadosLivro>> BuscaAsync()
     {
-        return await _context.Livros.ToListAsync();
+        List<DadosLivro> livros = await _context.Livros.Where(l => !l.IsDeleted).ToListAsync();
+        return livros;
+
     }
 
     public async Task<DadosLivro?> BuscaIdAsync(int id)
     {
         var busca = await _context.Livros.FindAsync(id);
-        return busca;
+        if (busca?.IsDeleted == true)
+            return null;
+        else
+            return busca;
     }
 
     public async Task<List<DadosLivro>> CriarAsync(List<DadosLivro> livros)
     {
+        foreach (var livro in livros)
+        {
+            livro.IsDeleted = false;
+            livro.DeletedAt = null;
+        }
 
         _context.Livros.AddRange(livros);
 
@@ -69,12 +79,29 @@ public class LivroService : ILivroService
         await _context.SaveChangesAsync();
         return (busca);
     }
-    public async Task<DadosLivro> DeletarAsync(DadosLivro livro)
+    public async Task<DadosLivro> DeletarAsync(int id, DadosLivro livro)
     {
 
-        _context.Livros.Remove(livro);
+        var busca = await _context.Livros.FindAsync(id);
+
+        if (busca == null)
+        {
+            return livro;
+        }
+        else
+        {
+            busca.IsDeleted = true;
+
+            string southAmericanTimeZoneId = "America/Sao_Paulo";
+            TimeZoneInfo southAmericanTimeZone = TimeZoneInfo.FindSystemTimeZoneById(southAmericanTimeZoneId);
+            DateTimeOffset southAmericanDateTimeOffset = TimeZoneInfo.ConvertTime(localDateTime, southAmericanTimeZone);
+
+            busca.DeletedAt = DateTimeOffset.UtcNow.AddHours(-3);
+        }
 
         await _context.SaveChangesAsync();
-        return livro;
+        return (busca);
+        //_context.Livros.Remove(livro);
+
     }
 }
