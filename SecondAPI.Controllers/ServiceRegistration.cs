@@ -4,22 +4,21 @@ using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 using SecondAPI.Services.Services;
 
-namespace SecondAPI.Services
+namespace SecondAPI.Services;
+
+public static class ServiceRegistration
 {
-    public static class ServiceRegistration
+    public static IServiceCollection AddSecondApiServices(this IServiceCollection services)
     {
-        public static IServiceCollection AddSecondApiServices(this IServiceCollection services)
-        {
-            //  -------Builder para testes locais---------- -
-            //services.AddDbContext<AppDbContext>(options =>
-            //options.UseInMemoryDatabase(("DefaultConnection")));
+        //  -------Builder para testes locais---------- -
+        //services.AddDbContext<AppDbContext>(options =>
+        //options.UseInMemoryDatabase(("DefaultConnection")));
 
-            services.AddScoped<IPasswordHasher<DadosUsuario>, PasswordHasher<DadosUsuario>>();
-            services.AddScoped<ILivroService, LivroService>();
-            services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPasswordHasher<DadosUsuario>, PasswordHasher<DadosUsuario>>();
+        services.AddScoped<ILivroService, LivroService>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
+        services.AddScoped<IAuthService, AuthService>();
 
-            return services;
-        }
+        return services;
     }
 }
