@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SecondAPI.Domain.Model;
-using SecondAPI.Domain.ViewModel;
 using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services.Interfaces;
 
@@ -19,13 +17,17 @@ public class UsuarioService : IUsuarioService
 
     public async Task<List<DadosUsuario>> BuscaAsync()
     {
-        return await _context.Usuarios.ToListAsync();
+        List<DadosUsuario> lista = await _context.Usuarios.Where(u => !u.IsDeleted).ToListAsync();
+        return lista;
     }
 
     public async Task<DadosUsuario?> BuscaIdAsync(int id)
     {
         var busca = await _context.Usuarios.FindAsync(id);
-        return busca;
+        if (busca.IsDeleted == true)
+            return null;
+        else
+            return busca;
     }
 
     public async Task<DadosUsuario> CriarAsync(DadosUsuario user)
@@ -78,16 +80,22 @@ public class UsuarioService : IUsuarioService
         await _context.SaveChangesAsync();
         return (busca);
     }
-    public async Task DeletarAsync(int id)
+    public async Task<DadosUsuario> DeletarAsync(int id, DadosUsuario user)
     {
-        var busca = await _context.Usuarios.FindAsync(id);
-        if (busca == null)
-            return;
-        else
-            _context.Usuarios.Remove(busca);
 
-        await _context.SaveChangesAsync();
-        return;
+        var busca = await _context.Usuarios.FindAsync(user.Id);
+
+        if (busca == null)
+        {
+            return user;
+        }
+        else
+        {
+            user.IsDeleted = true;
+            user.DeletedAt = DateTimeOffset.UtcNow;
+            await _context.SaveChangesAsync();
+            return (user);
+        }
     }
 }
 

@@ -18,6 +18,7 @@ public static class ServiceRegistration
         services.AddScoped<ILivroService, LivroService>();
         services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IEmprestimoService, EmprestimoService>();
 
         return services;
     }

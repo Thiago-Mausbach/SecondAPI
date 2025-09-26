@@ -91,17 +91,9 @@ public class LivroService : ILivroService
         else
         {
             busca.IsDeleted = true;
-
-            string southAmericanTimeZoneId = "America/Sao_Paulo";
-            TimeZoneInfo southAmericanTimeZone = TimeZoneInfo.FindSystemTimeZoneById(southAmericanTimeZoneId);
-            DateTimeOffset southAmericanDateTimeOffset = TimeZoneInfo.ConvertTime(localDateTime, southAmericanTimeZone);
-
-            busca.DeletedAt = DateTimeOffset.UtcNow.AddHours(-3);
+            busca.DeletedAt = DateTimeOffset.UtcNow;
+            await _context.SaveChangesAsync();
+            return (busca);
         }
-
-        await _context.SaveChangesAsync();
-        return (busca);
-        //_context.Livros.Remove(livro);
-
     }
 }

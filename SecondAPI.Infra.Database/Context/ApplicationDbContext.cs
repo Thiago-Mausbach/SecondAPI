@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
 
     public DbSet<DadosLivro> Livros { get; set; }
     public DbSet<DadosUsuario> Usuarios { get; set; }
+    public DbSet<LivroEmprestado> Emprestimos { get; set; }
 }
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>

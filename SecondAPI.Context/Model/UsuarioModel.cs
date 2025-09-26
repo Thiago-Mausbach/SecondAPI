@@ -9,4 +9,6 @@ public class DadosUsuario
     public string? Telefone { get; set; }
     public string Email { get; set; } = null!;
     public string? Senha { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
 }
