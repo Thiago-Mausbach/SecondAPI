@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecondAPI.Domain.Model;
-using SecondAPI.Domain.ViewModel;
 using SecondAPI.Services.Interfaces;
 
 namespace SecondAPI.Api.Controllers;
@@ -77,14 +76,14 @@ public class UsuariosController : ControllerBase
 
     [HttpDelete]
 
-    public async Task<ActionResult> DeleteAsync(int id)
+    public async Task<ActionResult> DeleteAsync(int id, DadosUsuario user)
     {
         var busca = await _service.BuscaIdAsync(id);
         if (busca == null)
             return NotFound($"Usuário de Id {id} não encontrado.");
         else
         {
-            await _service.DeletarAsync(id);
+            await _service.DeletarAsync(id, user);
             return Ok($"O usuário foi deletado");
         }
     }

@@ -4,13 +4,13 @@ using SecondAPI.Services.Interfaces;
 
 namespace SecondAPI.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("API/[controller]")]
 [ApiController]
-public class EmprestimoCotroller : ControllerBase
+public class EmprestimoController : ControllerBase
 {
     private readonly IEmprestimoService _service;
 
-    public EmprestimoCotroller(IEmprestimoService service)
+    public EmprestimoController(IEmprestimoService service)
     {
         _service = service;
 
@@ -78,6 +78,6 @@ public class EmprestimoCotroller : ControllerBase
         {
             await _service.DeletarAsync(delete.Id, delete);
         }
-        return Ok($"O emprestimo \"{delete.Id}\" foi deletado");
+        return Ok($"O emprestimo  \"{delete.Id}\" foi deletado");
     }
 }
