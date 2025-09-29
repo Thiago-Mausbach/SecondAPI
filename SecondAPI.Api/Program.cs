@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.EntityFrameworkCore;
-using SecondAPI.Api.Controllers;
+﻿using Microsoft.EntityFrameworkCore;
 using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services;
+using Swashbuckle.AspNetCore.SwaggerUI;
 namespace SecondAPI.Api;
 
 public class Program
@@ -11,18 +10,19 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
-            .Build();
+        //var configuration = new ConfigurationBuilder()
+        //    .SetBasePath(Directory.GetCurrentDirectory())
+        //    .AddJsonFile("appsettings.json")
+        //    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+        //    .Build();
 
-        builder.Services.AddControllers()
-               .ConfigureApplicationPartManager(apm =>
-               {
-                   apm.ApplicationParts.Add(new AssemblyPart(typeof(UsuariosController).Assembly));
-                   apm.ApplicationParts.Add(new AssemblyPart(typeof(LivrosController).Assembly));
-               });
+        builder.Services.AddControllers();
+        //.ConfigureApplicationPartManager(apm =>
+        //{
+        //    //apm.ApplicationParts.Add(new AssemblyPart(typeof(UsuariosController).Assembly));
+        //    apm.ApplicationParts.Add(new AssemblyPart(typeof(LivrosController).Assembly));
+        //    //apm.ApplicationParts.Add(new AssemblyPart(typeof(EmprestimoController).Assembly));
+        //});
 
 
         builder.Services.AddDbContext<AppDbContext>(options =>
@@ -43,14 +43,21 @@ public class Program
 
         builder.Services.AddSecondApiServices();
 
-        builder.Services.AddControllers();
-
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         var app = builder.Build();
 
-        app.UseSwagger();
-        app.UseSwaggerUI();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.ConfigObject.Urls = new List<UrlDescriptor>();
+            });
+        }
+
+
 
         //app.UseHttpsRedirection();
 

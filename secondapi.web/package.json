@@ -15,7 +15,7 @@
     "mdb-react-ui-kit": "^9.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.2",
+    "react-router-dom": "^7.9.3",
     "reactstrap": "^9.2.3"
   },
   "devDependencies": {

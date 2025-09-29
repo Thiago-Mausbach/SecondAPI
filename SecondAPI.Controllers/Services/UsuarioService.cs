@@ -24,7 +24,7 @@ public class UsuarioService : IUsuarioService
     public async Task<DadosUsuario?> BuscaIdAsync(int id)
     {
         var busca = await _context.Usuarios.FindAsync(id);
-        if (busca.IsDeleted == true)
+        if (busca?.IsDeleted == true)
             return null;
         else
             return busca;
