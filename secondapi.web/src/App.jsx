@@ -7,10 +7,59 @@ import axios from 'axios';
 
 
 function Home() {
-    return <h1>Home Page</h1>;
+    const baseUrl = "https://localhost:7146/API/Auth/login";
+
+    const [data, setData] = useState([])
+
+    const [usuario, setUsuario] = useState({
+        email: '',
+        senha: ''
+    })
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setUsuario({
+            ...usuario, [name]: value
+        });
+        console.log(usuario);
+    }
+
+    const requestAuth = async () => {
+        const payload = {
+            ...usuario
+        };
+
+        try {
+            await axios.put(`${baseUrl}`, payload);
+
+            setData(prev =>
+                prev.map(usuario =>
+                    usuario.senha === payload.senha ? { ...payload } : usuario
+                )
+            );
+        } catch (error) {
+            console.error("Erro Auth:", error);
+        }
+        };
+
+
+
+    return (
+        <div className="form-group">
+            <h3>Bem vindo! Faça seu login</h3>
+            <label>E-mail </label>
+            <br />
+            <input type="text" className="form-control" maxLength={50} style={{ width: '200px' }} name='email' onChange={ handleChange} />
+            <br />
+            <label>Senha </label>
+            <br />
+            <input type="password" className="form-control" style={{ width: '200px' }} name='senha' onChange={handleChange} />
+            <br />
+            <button className="btn btn-secondary" onClick={() => requestAuth()} >Login</button>{"   "}
+        </div>
+        
+    );
 }
-
-
 
 function Contact() {
     return <h1>Contact Page</h1>;
@@ -248,7 +297,7 @@ function App() {
             {/* Routes */}
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/about" element={<ListaLivros />} />
+                <Route path="/Livros" element={<ListaLivros />} />
                 <Route path="/contact" element={<Contact />} />
             </Routes>
         </BrowserRouter>

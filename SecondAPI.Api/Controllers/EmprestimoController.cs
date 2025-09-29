@@ -46,26 +46,6 @@ public class EmprestimoController : ControllerBase
         return Ok("Livros adicionados com sucesso");
     }
 
-    //[HttpPut("{id}")]
-    //public async Task<ActionResult> PutAsync(int id, [FromBody] LivroEmprestado livro)
-    //{
-    //    if (livro == null)
-    //        return BadRequest("Informãções do livro inválidas ou livro não encontrado");
-    //    else
-    //        return Ok(await _service.AtualizarTudoAsync(livro.IdEmprestimo, livro));
-    //}
-
-    //[HttpPatch]
-
-    //public async Task<ActionResult> PatchAsync(int id, [FromBody] LivroEmprestado livro)
-    //{
-
-    //    if (livro == null)
-    //        return NotFound($"{id} não encontrado.");
-    //    else
-    //        return Ok(await _service.AtualizaParcialAsync(id, livro));
-    //}
-
     [HttpDelete("{id}")]
 
     public async Task<ActionResult> DeleteAsync(int id)

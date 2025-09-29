@@ -10,19 +10,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //var configuration = new ConfigurationBuilder()
-        //    .SetBasePath(Directory.GetCurrentDirectory())
-        //    .AddJsonFile("appsettings.json")
-        //    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
-        //    .Build();
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+            .Build();
 
         builder.Services.AddControllers();
-        //.ConfigureApplicationPartManager(apm =>
-        //{
-        //    //apm.ApplicationParts.Add(new AssemblyPart(typeof(UsuariosController).Assembly));
-        //    apm.ApplicationParts.Add(new AssemblyPart(typeof(LivrosController).Assembly));
-        //    //apm.ApplicationParts.Add(new AssemblyPart(typeof(EmprestimoController).Assembly));
-        //});
 
 
         builder.Services.AddDbContext<AppDbContext>(options =>
@@ -56,10 +50,6 @@ public class Program
                 c.ConfigObject.Urls = new List<UrlDescriptor>();
             });
         }
-
-
-
-        //app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
