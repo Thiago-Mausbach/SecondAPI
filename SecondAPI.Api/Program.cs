@@ -42,14 +42,9 @@ public class Program
         var app = builder.Build();
 
 
-        if (app.Environment.IsDevelopment())
-        {
+
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.ConfigObject.Urls = new List<UrlDescriptor>();
-            });
-        }
+            app.UseSwaggerUI();
 
         app.UseAuthorization();
 

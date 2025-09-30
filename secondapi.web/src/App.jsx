@@ -7,59 +7,115 @@ import axios from 'axios';
 
 
 function Home() {
-    const baseUrl = "https://localhost:7146/API/Auth/login";
-
-    const [data, setData] = useState([])
+    const baseUrl = "https://localhost:7146/API/Auth";
 
     const [usuario, setUsuario] = useState({
-        email: '',
-        senha: ''
-    })
+        email: "",
+        senha: "",
+        nome: "",
+        sobrenome: ""
+    });
 
-    const handleChange = e => {
+    const [mensagem, setMensagem] = useState("");
+    const [isLogin, setIsLogin] = useState(true);
+
+    const handleChange = (e) => {
         const { name, value } = e.target;
-        setUsuario({
-            ...usuario, [name]: value
-        });
-        console.log(usuario);
-    }
+        setUsuario((user) => ({
+            ...user,
+            [name]: value
+        }));
+    };
 
-    const requestAuth = async () => {
-        const payload = {
-            ...usuario
-        };
-
+    const requestLogin = async () => {
         try {
-            await axios.put(`${baseUrl}`, payload);
+            const response = await axios.post(`${baseUrl}/login`, {
+                email: usuario.email,
+                senha: usuario.senha
+            });
 
-            setData(prev =>
-                prev.map(usuario =>
-                    usuario.senha === payload.senha ? { ...payload } : usuario
-                )
-            );
+            const { token } = response.data;
+            localStorage.setItem("authToken", token);
+
+            setMensagem("Login realizado com sucesso!");
         } catch (error) {
-            console.error("Erro Auth:", error);
+            setMensagem("Falha ao autenticar. Verifique email e senha.");
+            console.error("Erro Login:", error);
         }
-        };
+    };
 
+    const requestRegister = async () => {
+        try {
+            const response = await axios.post(`https://localhost:7146/API/Usuarios`, {
+                email: usuario.email,
+                senha: usuario.senha,
+                nome: usuario.nome,
+                sobrenome: ususario.sobrenome
+            });
 
+            setMensagem("Cadastro realizado com sucesso! Agora faça login.");
+            console.log("Resposta cadastro:", response.data);
+        } catch (error) {
+            setMensagem("Erro ao cadastrar. Tente novamente.");
+            console.error("Erro Register:", error);
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (isLogin) {
+            requestLogin();
+        } else {
+            requestRegister();
+        }
+    };
 
     return (
-        <div className="form-group">
-            <h3>Bem vindo! Faça seu login</h3>
-            <label>E-mail </label>
-            <br />
-            <input type="text" className="form-control" maxLength={50} style={{ width: '200px' }} name='email' onChange={ handleChange} />
-            <br />
-            <label>Senha </label>
-            <br />
-            <input type="password" className="form-control" style={{ width: '200px' }} name='senha' onChange={handleChange} />
-            <br />
-            <button className="btn btn-secondary" onClick={() => requestAuth()} >Login</button>{"   "}
+        <div style={{ maxWidth: "400px", margin: "50px auto" }}>
+            <h2>{isLogin ? "Login" : "Cadastro"}</h2>
+            <form onSubmit={handleSubmit}>
+                {!isLogin && (
+                    <>
+                    <div>
+                        <input type="text" name="nome" placeholder="Nome" value={usuario.nome} onChange={handleChange} required />
+                    </div>
+                     <div>
+                        <input type="text" name="sobrenome" placeholder="Sobrenome" value={usuario.sobrenome} onChange={handleChange} />
+                    </div>
+                    </>
+                )}
+                <div>
+                    <input type="email" name="email" placeholder="Email" value={usuario.email} onChange={handleChange} required />
+                </div>
+                <div>
+                    <input type="password" name="senha" placeholder="Senha" value={usuario.senha} onChange={handleChange} required />
+                </div>
+                <button type="submit">
+                    {isLogin ? "Entrar" : "Cadastrar"}
+                </button>
+            </form>
+            <p style={{ marginTop: "10px" }}>
+                {isLogin ? (
+                    <>
+                        Não tem conta?{" "}
+                        <button type="button" onClick={() => setIsLogin(false)}>
+                            Cadastre-se
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        Já tem conta?{" "}
+                        <button type="button" onClick={() => setIsLogin(true)}>
+                            Faça login
+                        </button>
+                    </>
+                )}
+            </p>
+            {mensagem && <p>{mensagem}</p>}
         </div>
-        
     );
 }
+
 
 function Contact() {
     return <h1>Contact Page</h1>;
