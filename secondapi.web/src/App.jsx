@@ -1,10 +1,32 @@
 ﻿import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
+const isAuthenticated = () => {
+    return !!localStorage.getItem("authToken");
+};
+
+function ProtectedRoute({ children }) {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
+}
+
+axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
 function Home() {
     const baseUrl = "https://localhost:7146/API/Auth";
@@ -38,8 +60,10 @@ function Home() {
             localStorage.setItem("authToken", token);
 
             setMensagem("Login realizado com sucesso!");
+
+            setTimeout(() => navigate("/Livros"), 1000);
         } catch (error) {
-            setMensagem("Falha ao autenticar. Verifique email e senha.");
+            setMensagem("Usuário ou senha incorretos.");
             console.error("Erro Login:", error);
         }
     };
@@ -50,7 +74,7 @@ function Home() {
                 email: usuario.email,
                 senha: usuario.senha,
                 nome: usuario.nome,
-                sobrenome: ususario.sobrenome
+                sobrenome: usuario.sobrenome
             });
 
             setMensagem("Cadastro realizado com sucesso! Agora faça login.");
@@ -98,14 +122,14 @@ function Home() {
                 {isLogin ? (
                     <>
                         Não tem conta?{" "}
-                        <button type="button" onClick={() => setIsLogin(false)}>
+                        <button type="button" onClick={() => { setIsLogin(false); setMensagem(""); }} >
                             Cadastre-se
                         </button>
                     </>
                 ) : (
                     <>
                         Já tem conta?{" "}
-                        <button type="button" onClick={() => setIsLogin(true)}>
+                        <button type="button" onClick={() => { setIsLogin(true); setMensagem(""); }} >
                             Faça login
                         </button>
                     </>
@@ -353,7 +377,7 @@ function App() {
             {/* Routes */}
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/Livros" element={<ListaLivros />} />
+                <Route path="/Livros" element={<ProtectedRoute><ListaLivros /></ProtectedRoute>} />
                 <Route path="/contact" element={<Contact />} />
             </Routes>
         </BrowserRouter>

@@ -42,8 +42,7 @@ public class UsuariosController : ControllerBase
     {
 
         var novoUsuario = await _service.CriarAsync(user);
-        novoUsuario.Senha = null;
-        return CreatedAtAction(nameof(PostAsync), new { id = novoUsuario.Id }, novoUsuario);
+        return Ok(novoUsuario);
     }
 
     [HttpPut("{id}")]
