@@ -1,14 +1,11 @@
 ﻿import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-const isAuthenticated = () => {
-    return !!localStorage.getItem("authToken");
-};
 
 function ProtectedRoute({ children }) {
     const token = localStorage.getItem("authToken");
@@ -30,6 +27,8 @@ axios.interceptors.request.use((config) => {
 
 function Home() {
     const baseUrl = "https://localhost:7146/API/Auth";
+
+    const navigate = useNavigate();
 
     const [usuario, setUsuario] = useState({
         email: "",
@@ -141,8 +140,216 @@ function Home() {
 }
 
 
-function Contact() {
-    return <h1>Contact Page</h1>;
+function Emprestimos() {
+    const baseUrl = "https://localhost:7146/API/emprestimo";
+
+    const [data, setData] = useState([])
+
+    const [modalIncluir, setModalIncluir] = useState(false);
+
+    const [modalEditar, setModalEditar] = useState(false);
+
+    const [modalExcluir, setModalExcluir] = useState(false);
+
+    const [emprestimoSelecionado, setEmprestimoSelecionado] = useState({
+        dadosLivrosId: '',
+        dadosUsuarioId: '',
+        dataEmprestimo: '',
+        dataDevolução: ''
+    })
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setEmprestimoSelecionado({
+            ...emprestimoSelecionado, [name]: value
+        });
+        console.log(emprestimoSelecionado);
+    }
+
+    const abrirFecharModalEditar = () => {
+        setModalEditar(!modalEditar);
+    }
+
+    const abrirFecharModalIncluir = () => {
+        setModalIncluir(!modalIncluir);
+    }
+
+    const abrirFecharModalExcluir = () => {
+        setModalExcluir(!modalExcluir);
+    }
+
+    const selecionarEmprestimo = (livro, caso) => {
+        setEmprestimoSelecionado(livro);
+        (caso === "Editar") ?
+            abrirFecharModalEditar() : abrirFecharModalExcluir();
+    }
+
+    const requestGet = async () => {
+        await axios.get(baseUrl)
+            .then(response => {
+                setData(response.data);
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const requestPost = async () => {
+        emprestimoSelecionado.ano = parseInt(emprestimoSelecionado.ano);
+        await axios.post(baseUrl, [emprestimoSelecionado])
+            .then(response => {
+                setData(data.concat(response.data));
+                requestGet();
+                abrirFecharModalIncluir();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+
+    const requestPut = async () => {
+        const payload = {
+            ...emprestimoSelecionado
+        };
+
+        try {
+            await axios.put(`${baseUrl}/${emprestimoSelecionado.id}`, payload);
+
+            setData(prev =>
+                prev.map(livro =>
+                    livro.id === payload.id ? { ...payload } : livro
+                )
+            );
+
+            abrirFecharModalEditar();
+        } catch (error) {
+            console.error("Erro no PUT:", error);
+        }
+    };
+
+    const pedidoDelete = async () => {
+        await axios.patch(baseUrl + "/" + emprestimoSelecionado.id)
+            .then(() => {
+                requestGet();
+                abrirFecharModalExcluir();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    useEffect(() => {
+        requestGet();
+    }, []);
+
+    return (
+        <div>
+            <br></br>
+            <h3>Registo de empréstimos</h3>
+            <header>
+                <button onClick={() => abrirFecharModalIncluir()} className="btn btn-success">Incluir novo livro</button>
+            </header>
+            <br></br>
+            <table className="table table-bordered" >
+
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Usuário</th>
+                        <th>Livro</th>
+                        <th>Data do empréstimo</th>
+                        <th>Data de devolução</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {data.map(emprestimo => (
+                        <tr key={emprestimo.id}>
+                            <td>{emprestimo.id}</td>
+                            {/*<td>{emprestimo.livro.titulo}</td> VERIFICAR ISSO AQUI*/}
+                            <td>{emprestimo.usuario.email}</td>
+                            <td>{emprestimo.dataemprestimo}</td>
+                            <td>{emprestimo.datadevolucao}</td>
+                            <td>
+                                <button className="btn btn-primary" onClick={() => selecionarEmprestimo(emprestimo, "Editar")}>Editar</button> {" "}
+                                <button className="btn btn-danger" onClick={() => selecionarEmprestimo(emprestimo, "Excluir")}>Excluir</button> {" "}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <Modal isOpen={modalIncluir}>
+                <ModalHeader>Incluir Emprestimos</ModalHeader>
+                <ModalBody>
+                    <div className="form-group">
+                        <label>Titulo: </label>
+                        <br />
+                        <input type="text" className="form-control" name='titulo' onChange={handleChange} />
+                        <br />
+                        <label>Autor: </label>
+                        <br />
+                        <input type="text" className="form-control" name='autor' onChange={handleChange} />
+                        <br />
+                        <label>Ano: </label>
+                        <br />
+                        <input type="text" className="form-control" name='ano' onChange={handleChange} />
+                        <br />
+                        <label>Genero: </label>
+                        <br />
+                        <input type="text" className="form-control" name='genero' onChange={handleChange} />
+                        <br />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btn btn-primary" onClick={() => requestPost()}>Incluir</button>{"   "}
+                    <button className="btn btn-danger" onClick={() => abrirFecharModalIncluir()}>Cancelar</button>
+                </ModalFooter>
+            </Modal>
+
+            <Modal isOpen={modalEditar}>
+                <ModalHeader>Editar empréstimo</ModalHeader>
+                <ModalBody>
+                    <div className="form-group">
+                        <label>ID: </label>
+                        <br />
+                        <input type="text" className="form-control" value={emprestimoSelecionado.id} readOnly />
+                        <br />
+                        <label>Titulo: </label>
+                        <br />
+                        <input type="text" className="form-control" name="titulo" onChange={handleChange} value={emprestimoSelecionado.titulo} />
+                        <br />
+                        <label>Autor: </label>
+                        <br />
+                        <input type="text" className="form-control" name="autor" onChange={handleChange} value={emprestimoSelecionado.autor} />
+                        <br />
+                        <label>Ano: </label>
+                        <br />
+                        <input type="text" className="form-control" name="ano" onChange={handleChange} value={emprestimoSelecionado.ano} />
+                        <br />
+                        <label>Genero: </label>
+                        <br />
+                        <input type="text" className="form-control" name="genero" onChange={handleChange} value={emprestimoSelecionado.genero} />
+                        <br />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btn btn-primary" onClick={() => requestPut()}>Editar</button>{"   "}
+                    <button className="btn btn-danger" onClick={() => abrirFecharModalEditar()}>Cancelar</button>
+                </ModalFooter>
+            </Modal>
+
+            <Modal isOpen={modalExcluir}>
+                <ModalBody>
+                    Deseja excluir este registro?: {emprestimoSelecionado && emprestimoSelecionado.id}?
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btn btn-danger" onClick={() => pedidoDelete()}> Sim</button>
+                    <button className="btn btn-secondary" onClick={() => abrirFecharModalExcluir()}>Cancelar</button>
+                </ModalFooter>
+            </Modal>
+
+        </div>
+    );
 }
 
 function ListaLivros() {
@@ -367,18 +574,16 @@ function ListaLivros() {
 function App() {
     return (
         <BrowserRouter>
-            {/* Navigation */}
             <nav>
                 <Link to="/">Login</Link> |{" "}
                 <Link to="/Livros">Livros</Link> |{" "}
-                <Link to="/contact">Login</Link>
+                <Link to="/contact">Empréstimos</Link>{ " "}
             </nav>
 
-            {/* Routes */}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/Livros" element={<ProtectedRoute><ListaLivros /></ProtectedRoute>} />
-                <Route path="/contact" element={<Contact />} />
+                <Route path="/Emprestimos" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
             </Routes>
         </BrowserRouter>
     );
