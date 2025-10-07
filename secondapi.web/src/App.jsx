@@ -152,8 +152,8 @@ function Emprestimos() {
     const [modalExcluir, setModalExcluir] = useState(false);
 
     const [emprestimoSelecionado, setEmprestimoSelecionado] = useState({
-        dadosLivrosId: '',
-        dadosUsuarioId: '',
+        usuarioEmail: '',
+        livroTitulo: '',
         dataEmprestimo: '',
         dataDevolução: ''
     })
@@ -178,8 +178,8 @@ function Emprestimos() {
         setModalExcluir(!modalExcluir);
     }
 
-    const selecionarEmprestimo = (livro, caso) => {
-        setEmprestimoSelecionado(livro);
+    const selecionarEmprestimo = (emprestimo, caso) => {
+        setEmprestimoSelecionado(emprestimo);
         (caso === "Editar") ?
             abrirFecharModalEditar() : abrirFecharModalExcluir();
     }
@@ -194,7 +194,6 @@ function Emprestimos() {
     }
 
     const requestPost = async () => {
-        emprestimoSelecionado.ano = parseInt(emprestimoSelecionado.ano);
         await axios.post(baseUrl, [emprestimoSelecionado])
             .then(response => {
                 setData(data.concat(response.data));
@@ -215,8 +214,8 @@ function Emprestimos() {
             await axios.put(`${baseUrl}/${emprestimoSelecionado.id}`, payload);
 
             setData(prev =>
-                prev.map(livro =>
-                    livro.id === payload.id ? { ...payload } : livro
+                prev.map(emprestimo =>
+                    emprestimo.id === payload.id ? { ...payload } : emprestimo
                 )
             );
 
@@ -245,7 +244,7 @@ function Emprestimos() {
             <br></br>
             <h3>Registo de empréstimos</h3>
             <header>
-                <button onClick={() => abrirFecharModalIncluir()} className="btn btn-success">Incluir novo livro</button>
+                <button onClick={() => abrirFecharModalIncluir()} className="btn btn-success">Incluir novo Empréstimo</button>
             </header>
             <br></br>
             <table className="table table-bordered" >
@@ -265,7 +264,7 @@ function Emprestimos() {
                     {data.map(emprestimo => (
                         <tr key={emprestimo.id}>
                             <td>{emprestimo.id}</td>
-                            {/*<td>{emprestimo.livro.titulo}</td> VERIFICAR ISSO AQUI*/}
+                            <td>{emprestimo.livro.titulo}</td>
                             <td>{emprestimo.usuario.email}</td>
                             <td>{emprestimo.dataemprestimo}</td>
                             <td>{emprestimo.datadevolucao}</td>
@@ -282,21 +281,17 @@ function Emprestimos() {
                 <ModalHeader>Incluir Emprestimos</ModalHeader>
                 <ModalBody>
                     <div className="form-group">
-                        <label>Titulo: </label>
+                        <label>Livro: </label>
                         <br />
-                        <input type="text" className="form-control" name='titulo' onChange={handleChange} />
+                        <input type="text" className="form-control" name='livroTitulo' onChange={handleChange} />
                         <br />
-                        <label>Autor: </label>
+                        <label>Usuário: </label>
                         <br />
-                        <input type="text" className="form-control" name='autor' onChange={handleChange} />
+                        <input type="text" className="form-control" name='usuarioEmail' onChange={handleChange} />
                         <br />
-                        <label>Ano: </label>
+                        <label>Data do empréstimo: </label>
                         <br />
-                        <input type="text" className="form-control" name='ano' onChange={handleChange} />
-                        <br />
-                        <label>Genero: </label>
-                        <br />
-                        <input type="text" className="form-control" name='genero' onChange={handleChange} />
+                        <input type="text" className="form-control" name='dataEmprestimo' onChange={handleChange} />
                         <br />
                     </div>
                 </ModalBody>
@@ -314,19 +309,19 @@ function Emprestimos() {
                         <br />
                         <input type="text" className="form-control" value={emprestimoSelecionado.id} readOnly />
                         <br />
-                        <label>Titulo: </label>
+                        <label>Livro: </label>
                         <br />
                         <input type="text" className="form-control" name="titulo" onChange={handleChange} value={emprestimoSelecionado.titulo} />
                         <br />
-                        <label>Autor: </label>
+                        <label>Usuário: </label>
                         <br />
                         <input type="text" className="form-control" name="autor" onChange={handleChange} value={emprestimoSelecionado.autor} />
                         <br />
-                        <label>Ano: </label>
+                        <label>Data do emprestimo: </label>
                         <br />
                         <input type="text" className="form-control" name="ano" onChange={handleChange} value={emprestimoSelecionado.ano} />
                         <br />
-                        <label>Genero: </label>
+                        <label>Data da devolução: </label>
                         <br />
                         <input type="text" className="form-control" name="genero" onChange={handleChange} value={emprestimoSelecionado.genero} />
                         <br />
@@ -577,13 +572,13 @@ function App() {
             <nav>
                 <Link to="/">Login</Link> |{" "}
                 <Link to="/Livros">Livros</Link> |{" "}
-                <Link to="/contact">Empréstimos</Link>{ " "}
+                <Link to="/Emprestimos">Empréstimos</Link>{ " "}
             </nav>
 
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/Livros" element={<ProtectedRoute><ListaLivros /></ProtectedRoute>} />
-                <Route path="/Emprestimos" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
+                <Route path="/Emprestimos" element={<ProtectedRoute><Emprestimos /></ProtectedRoute>} />
             </Routes>
         </BrowserRouter>
     );

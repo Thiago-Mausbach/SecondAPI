@@ -16,7 +16,11 @@ public class EmprestimoService : IEmprestimoService
 
     public async Task<List<LivroEmprestado>> BuscaAsync()
     {
-        List<LivroEmprestado> emprestados = await _context.Emprestimos.Where(l => !l.IsDeleted).ToListAsync();
+        List<LivroEmprestado> emprestados = await _context.Emprestimos
+            .Where(l => !l.IsDeleted)
+            .Include(e => e.DadosUsuario)
+            .Include(e => e.DadosLivro)
+            .ToListAsync();
         return emprestados;
 
     }
