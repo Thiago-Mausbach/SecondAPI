@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SecondAPI.Domain.Dtos;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 
@@ -39,10 +40,10 @@ public class EmprestimoController : ControllerBase
 
     [HttpPost]
 
-    public async Task<ActionResult> PostAsync([FromBody] List<LivroEmprestado> emprestados)
+    public async Task<ActionResult> PostAsync(EmprestimoDto dto)
     {
 
-        await _service.CriarAsync(emprestados);
+        await _service.CriarAsync(dto);
         return Ok("Livros adicionados com sucesso");
     }
 

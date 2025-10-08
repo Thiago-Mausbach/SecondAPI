@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SecondAPI.Domain.Dtos;
 using SecondAPI.Domain.Model;
 using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services.Interfaces;
@@ -34,30 +35,35 @@ public class EmprestimoService : IEmprestimoService
             return busca;
     }
 
-    public async Task<List<LivroEmprestado>> CriarAsync(List<LivroEmprestado> emprestados)
+    public async Task<LivroEmprestado> CriarAsync(EmprestimoDto dto)
     {
-        foreach (var livro in emprestados)
-        {
-            livro.DataEmprestimo = DateTime.UtcNow;
-            livro.DataDevolucao = DateTime.UtcNow.AddDays(7);
-            livro.IsDeleted = false;
-            livro.DeletedAt = null;
-        }
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == dto.UsuarioEmail);
+        var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Titulo == dto.LivroTitulo);
 
-        _context.Emprestimos.AddRange(emprestados);
+        var emprestimo = new LivroEmprestado
+        {
+            DadosUsuarioId = usuario.Id,
+            DadosLivrosId = livro.Id,
+            DataEmprestimo = DateTimeOffset.UtcNow,
+            DataDevolucao = DateTimeOffset.UtcNow.AddDays(7),
+            IsDeleted = false,
+            DeletedAt = null
+        };
+
+        _context.Emprestimos.Add(emprestimo);
 
         await _context.SaveChangesAsync();
-        return emprestados;
+        return emprestimo;
     }
 
-    public async Task<LivroEmprestado> DeletarAsync(int id, LivroEmprestado emprestado)
+    public async Task<LivroEmprestado> DeletarAsync(int id, EmprestimoDto dto)
     {
 
         var busca = await _context.Emprestimos.FindAsync(id);
 
         if (busca == null)
         {
-            return emprestado;
+            return null;
         }
         else
         {
@@ -67,43 +73,20 @@ public class EmprestimoService : IEmprestimoService
             return (busca);
         }
     }
+
+
+    public async Task<LivroEmprestado> AtualizarTudoAsync(EmprestimoDto dto)
+    {
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == dto.UsuarioEmail);
+        var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Titulo == dto.LivroTitulo);
+
+
+        var busca = await _context.Emprestimos.FindAsync(dto.Id);
+        busca!.DataDevolucao = dto.DataDevolucao;
+        busca.DataEmprestimo = dto.DataEmprestimo;
+        busca.DadosUsuarioId = usuario.Id;
+        busca.DadosLivrosId = livro.Id;
+        await _context.SaveChangesAsync();
+        return busca;
+    }
 }
-
-// ~>>>Acho que não preciso de um put
-//public async Task<LivroEmprestado> AtualizarTudoAsync(int id, LivroEmprestado livro)
-//{
-//    var busca = await _context.Emprestimos.FindAsync(id);
-//    busca!.DataDevolucao = livro.DataDevolucao;
-//    busca.DataEmprestimo = livro.DataEmprestimo;
-//    busca. = livro.Ano;
-//    busca.Genero = livro.Genero;
-//    await _context.SaveChangesAsync();
-//    return livro;
-//}
-
-
-// >>>> Também não sei se precisa de um patch
-//public async Task<DadosLivro> AtualizaParcialAsync(int id, DadosLivro livro)
-//{
-//    var busca = await _context.Livros.FindAsync(id);
-
-//    if (busca == null)
-//    {
-//        return livro;
-//    }
-
-//    if (livro.Titulo != null && livro.Titulo != "")
-//        busca.Titulo = livro.Titulo;
-
-//    if (livro.Autor != null && livro.Autor != "")
-//        busca.Autor = livro.Autor;
-
-//    if (livro.Ano != null)
-//        busca.Ano = livro.Ano;
-
-//    if (livro.Genero != null && livro.Genero != "")
-//        busca.Genero = livro.Genero;
-
-//    await _context.SaveChangesAsync();
-//    return (busca);
-//}
