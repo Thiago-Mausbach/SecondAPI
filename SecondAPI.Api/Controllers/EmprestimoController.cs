@@ -18,7 +18,7 @@ public class EmprestimoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LivroEmprestado>>> GetAsync()
+    public async Task<ActionResult<IEnumerable<Emprestimo>>> GetAsync()
     {
         var livros = await _service.BuscaAsync();
         if (livros == null || livros.Count == 0)
@@ -29,7 +29,7 @@ public class EmprestimoController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public async Task<ActionResult<LivroEmprestado>> GetIdAsync(int id)
+    public async Task<ActionResult<Emprestimo>> GetIdAsync(int id)
     {
         var busca = await _service.BuscaIdAsync(id);
         if (busca == null)
@@ -49,7 +49,7 @@ public class EmprestimoController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<ActionResult> DeleteAsync(int id)
+    public async Task<ActionResult> DeleteAsync(int id, EmprestimoDto emprestado)
     {
         var delete = await _service.BuscaIdAsync(id);
 
@@ -57,7 +57,7 @@ public class EmprestimoController : ControllerBase
             return BadRequest($"{id} não econtrado");
         else
         {
-            await _service.DeletarAsync(delete.Id, delete);
+            await _service.DeletarAsync(delete.Id, emprestado);
         }
         return Ok($"O emprestimo  \"{delete.Id}\" foi deletado");
     }

@@ -1,10 +1,10 @@
 ﻿namespace SecondAPI.Domain.Model;
 
-public class LivroEmprestado
+public class Emprestimo
 {
     public int Id { get; set; }
     public DadosLivro DadosLivro { get; set; } = null!;
-    public int DadosLivrosId { get; set; }
+    public int DadosLivroId { get; set; }
     public DadosUsuario DadosUsuario { get; set; } = null!;
     public int DadosUsuarioId { get; set; }
     public DateTimeOffset DataEmprestimo { get; set; }

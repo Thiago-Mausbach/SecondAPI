@@ -15,18 +15,25 @@ public class EmprestimoService : IEmprestimoService
         _context = context;
     }
 
-    public async Task<List<LivroEmprestado>> BuscaAsync()
+    public async Task<List<EmprestimoDto>> BuscaAsync()
     {
-        List<LivroEmprestado> emprestados = await _context.Emprestimos
+        List<EmprestimoDto> emprestados = await _context.Emprestimos
             .Where(l => !l.IsDeleted)
             .Include(e => e.DadosUsuario)
             .Include(e => e.DadosLivro)
+            .Select(e => new EmprestimoDto
+            {
+                Id = e.Id,
+                UsuarioEmail = e.DadosUsuario.Email,
+                LivroTitulo = e.DadosLivro.Titulo,
+                DataEmprestimo = e.DataEmprestimo,
+                DataDevolucao = e.DataDevolucao
+            })
             .ToListAsync();
         return emprestados;
-
     }
 
-    public async Task<LivroEmprestado?> BuscaIdAsync(int id)
+    public async Task<Emprestimo?> BuscaIdAsync(int id)
     {
         var busca = await _context.Emprestimos.FindAsync(id);
         if (busca?.IsDeleted == true)
@@ -35,28 +42,31 @@ public class EmprestimoService : IEmprestimoService
             return busca;
     }
 
-    public async Task<LivroEmprestado> CriarAsync(EmprestimoDto dto)
+    public async Task<Emprestimo?> CriarAsync(EmprestimoDto dto)
     {
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == dto.UsuarioEmail);
         var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Titulo == dto.LivroTitulo);
 
-        var emprestimo = new LivroEmprestado
+        if (livro == null || usuario == null)
+            return null;
+
+        var emprestimo = new Emprestimo
         {
-            DadosUsuarioId = usuario.Id,
-            DadosLivrosId = livro.Id,
-            DataEmprestimo = DateTimeOffset.UtcNow,
-            DataDevolucao = DateTimeOffset.UtcNow.AddDays(7),
             IsDeleted = false,
-            DeletedAt = null
+            DeletedAt = null,
+            DadosUsuarioId = usuario.Id,
+            DadosLivro = livro,
+            DataEmprestimo = DateTimeOffset.UtcNow,
+            DataDevolucao = DateTimeOffset.UtcNow.AddDays(7)
         };
 
-        _context.Emprestimos.Add(emprestimo);
+        _context.Emprestimos.Add(entity: emprestimo);
 
         await _context.SaveChangesAsync();
         return emprestimo;
     }
 
-    public async Task<LivroEmprestado> DeletarAsync(int id, EmprestimoDto dto)
+    public async Task<Emprestimo> DeletarAsync(int id, EmprestimoDto dto)
     {
 
         var busca = await _context.Emprestimos.FindAsync(id);
@@ -75,7 +85,7 @@ public class EmprestimoService : IEmprestimoService
     }
 
 
-    public async Task<LivroEmprestado> AtualizarTudoAsync(EmprestimoDto dto)
+    public async Task<Emprestimo> AtualizarTudoAsync(EmprestimoDto dto)
     {
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == dto.UsuarioEmail);
         var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Titulo == dto.LivroTitulo);
@@ -85,7 +95,7 @@ public class EmprestimoService : IEmprestimoService
         busca!.DataDevolucao = dto.DataDevolucao;
         busca.DataEmprestimo = dto.DataEmprestimo;
         busca.DadosUsuarioId = usuario.Id;
-        busca.DadosLivrosId = livro.Id;
+        busca.DadosLivroId = livro.Id;
         await _context.SaveChangesAsync();
         return busca;
     }

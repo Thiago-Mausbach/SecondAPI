@@ -14,7 +14,20 @@ public class AppDbContext : DbContext
 
     public DbSet<DadosLivro> Livros { get; set; }
     public DbSet<DadosUsuario> Usuarios { get; set; }
-    public DbSet<LivroEmprestado> Emprestimos { get; set; }
+    public DbSet<Emprestimo> Emprestimos { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+
+        modelBuilder.Entity<Emprestimo>(e =>
+        {
+            e.HasOne(x => x.DadosLivro)
+            .WithMany(x => x.Emprestimos)
+            .HasForeignKey(x => x.DadosLivroId);
+        });
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>

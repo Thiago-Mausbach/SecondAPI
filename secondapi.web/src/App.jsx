@@ -141,7 +141,7 @@ function Home() {
 
 
 function Emprestimos() {
-    const baseUrl = "https://localhost:7146/API/emprestimo";
+    const baseUrl = "https://localhost:7146/API/Emprestimo";
 
     const [data, setData] = useState([])
 
@@ -154,8 +154,6 @@ function Emprestimos() {
     const [emprestimoSelecionado, setEmprestimoSelecionado] = useState({
         usuarioEmail: '',
         livroTitulo: '',
-        dataEmprestimo: '',
-        dataDevolução: ''
     })
 
     const handleChange = e => {
@@ -226,7 +224,7 @@ function Emprestimos() {
     };
 
     const pedidoDelete = async () => {
-        await axios.patch(baseUrl + "/" + emprestimoSelecionado.id)
+        await axios.delete(baseUrl + "/" + emprestimoSelecionado.id)
             .then(() => {
                 requestGet();
                 abrirFecharModalExcluir();
@@ -289,10 +287,10 @@ function Emprestimos() {
                         <br />
                         <input type="text" className="form-control" name='usuarioEmail' onChange={handleChange} />
                         <br />
-                        <label>Data do empréstimo: </label>
-                        <br />
-                        <input type="text" className="form-control" name='dataEmprestimo' onChange={handleChange} />
-                        <br />
+                        {/*<label>Data do empréstimo: </label>*/}
+                        {/*<br />*/}
+                        {/*<input type="text" className="form-control" name='dataEmprestimo' onChange={handleChange} />*/}
+                        {/*<br />*/}
                     </div>
                 </ModalBody>
                 <ModalFooter>
@@ -436,7 +434,7 @@ function ListaLivros() {
     };
 
     const pedidoDelete = async () => {
-        await axios.patch(baseUrl + "/" + livroSelecionado.id)
+        await axios.delete(baseUrl + "/" + livroSelecionado.id)
             .then(() => {
                 requestGet();
                 abrirFecharModalExcluir();

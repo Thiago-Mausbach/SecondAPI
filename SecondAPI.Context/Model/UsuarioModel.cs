@@ -11,5 +11,5 @@ public class DadosUsuario
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
 
-    public ICollection<LivroEmprestado> Emprestimo { get; set; } = new List<LivroEmprestado>();
+    public ICollection<Emprestimo> Emprestimo { get; set; } = new List<Emprestimo>();
 }
