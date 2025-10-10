@@ -17,6 +17,7 @@ public class LivrosController : ControllerBase
         _service = service;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DadosLivro>>> GetAsync()
     {
@@ -27,6 +28,7 @@ public class LivrosController : ControllerBase
             return Ok(livros);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id}")]
 
     public async Task<ActionResult<DadosLivro>> GetIdAsync(int id)

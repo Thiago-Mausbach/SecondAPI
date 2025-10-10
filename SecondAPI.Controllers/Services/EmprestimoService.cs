@@ -17,7 +17,7 @@ public class EmprestimoService : IEmprestimoService
 
     public async Task<List<EmprestimoDto>> BuscaAsync()
     {
-        List<EmprestimoDto> emprestados = await _context.Emprestimos
+        List<EmprestimoDto> emprestimos = await _context.Emprestimos
             .Where(l => !l.IsDeleted)
             .Include(e => e.DadosUsuario)
             .Include(e => e.DadosLivro)
@@ -30,7 +30,7 @@ public class EmprestimoService : IEmprestimoService
                 DataDevolucao = e.DataDevolucao
             })
             .ToListAsync();
-        return emprestados;
+        return emprestimos;
     }
 
     public async Task<Emprestimo?> BuscaIdAsync(int id)

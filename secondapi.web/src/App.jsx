@@ -9,7 +9,6 @@ import axios from 'axios';
 
 function ProtectedRoute({ children }) {
     const token = localStorage.getItem("authToken");
-
     if (!token) {
         return <Navigate to="/" replace />;
     }
@@ -55,7 +54,7 @@ function Home() {
                 senha: usuario.senha
             });
 
-            const { token } = response.data;
+            const token = response.data.token;
             localStorage.setItem("authToken", token);
 
             setMensagem("Login realizado com sucesso!");
@@ -183,7 +182,12 @@ function Emprestimos() {
     }
 
     const requestGet = async () => {
-        await axios.get(baseUrl)
+        const token = localStorage.getItem("authToken");
+        await axios.get(baseUrl, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setData(response.data);
             }).catch(error => {
@@ -262,10 +266,10 @@ function Emprestimos() {
                     {data.map(emprestimo => (
                         <tr key={emprestimo.id}>
                             <td>{emprestimo.id}</td>
-                            <td>{emprestimo.livro.titulo}</td>
-                            <td>{emprestimo.usuario.email}</td>
-                            <td>{emprestimo.dataemprestimo}</td>
-                            <td>{emprestimo.datadevolucao}</td>
+                            <td>{emprestimo.usuarioEmail || "---"}</td>
+                            <td>{emprestimo.livroTitulo || "---"}</td>
+                            <td>{new Date(emprestimo.dataEmprestimo).toLocaleString("pt-BR")}</td>
+                            <td>{new Date(emprestimo.dataDevolucao).toLocaleString("pt-BR")}</td>
                             <td>
                                 <button className="btn btn-primary" onClick={() => selecionarEmprestimo(emprestimo, "Editar")}>Editar</button> {" "}
                                 <button className="btn btn-danger" onClick={() => selecionarEmprestimo(emprestimo, "Excluir")}>Excluir</button> {" "}

@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SecondAPI.Infra.Database.Context;
 using SecondAPI.Services;
-using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Text;
+
 namespace SecondAPI.Api;
 
 public class Program
@@ -35,17 +38,36 @@ public class Program
             });
         });
 
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+       .AddJwtBearer(options =>
+       {
+           options.IncludeErrorDetails = true;
+           options.TokenValidationParameters = new TokenValidationParameters
+           {
+               ValidateIssuer = true,
+               ValidateAudience = true,
+               ValidateLifetime = true,
+               ValidateIssuerSigningKey = true,
+               ValidIssuer = "localhost:7146",
+               ValidAudience = "localhost:5173",
+               IssuerSigningKey = new SymmetricSecurityKey(
+                   Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+               )
+           };
+       });
+
         builder.Services.AddSecondApiServices();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         var app = builder.Build();
 
+        builder.Services.AddAuthorization();
 
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseCors("AllowAll");

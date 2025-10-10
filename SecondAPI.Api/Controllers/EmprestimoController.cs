@@ -18,9 +18,9 @@ public class EmprestimoController : ControllerBase
 
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Emprestimo>>> GetAsync()
+    public async Task<ActionResult<IEnumerable<EmprestimoDto>>> GetAsync()
     {
         var livros = await _service.BuscaAsync();
         if (livros == null || livros.Count == 0)

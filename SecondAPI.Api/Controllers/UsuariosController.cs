@@ -16,6 +16,7 @@ public class UsuariosController : ControllerBase
         _service = service;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DadosUsuario>>> GetAsync()
     {
@@ -26,6 +27,7 @@ public class UsuariosController : ControllerBase
             return Ok(users);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id}")]
 
     public async Task<ActionResult<DadosUsuario>> GetAsync(int id)
@@ -37,7 +39,7 @@ public class UsuariosController : ControllerBase
             return Ok(busca);
     }
 
-
+    [AllowAnonymous]
     [HttpPost]
 
     public async Task<ActionResult> PostAsync([FromBody] DadosUsuario user)
@@ -47,6 +49,7 @@ public class UsuariosController : ControllerBase
         return Ok(novoUsuario);
     }
 
+    [AllowAnonymous]
     [HttpPut("{id}")]
     public async Task<ActionResult> PutAsync(int id, [FromBody] DadosUsuario user)
     {
@@ -62,7 +65,7 @@ public class UsuariosController : ControllerBase
         return Ok(busca);
     }
 
-
+    [AllowAnonymous]
     [HttpPatch]
 
     public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosUsuario user)
