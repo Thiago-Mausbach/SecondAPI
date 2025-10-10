@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 
@@ -37,6 +38,7 @@ public class LivrosController : ControllerBase
             return Ok(busca);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
 
     public async Task<ActionResult> PostAsync([FromBody] List<DadosLivro> biblioteca)
@@ -46,6 +48,7 @@ public class LivrosController : ControllerBase
         return Ok("Livros adicionados com sucesso");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<ActionResult> PutAsync(int id, [FromBody] DadosLivro livro)
     {
@@ -55,6 +58,7 @@ public class LivrosController : ControllerBase
             return Ok(await _service.AtualizarTudoAsync(livro.Id, livro));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPatch]
 
     public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosLivro livro)
@@ -66,6 +70,7 @@ public class LivrosController : ControllerBase
             return Ok(await _service.AtualizaParcialAsync(id, livro));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
 
     public async Task<ActionResult> DeleteAsync(int id)

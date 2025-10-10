@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SecondAPI.Domain.Dtos;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
@@ -17,6 +18,7 @@ public class EmprestimoController : ControllerBase
 
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Emprestimo>>> GetAsync()
     {
@@ -27,6 +29,7 @@ public class EmprestimoController : ControllerBase
             return Ok(livros);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id}")]
 
     public async Task<ActionResult<Emprestimo>> GetIdAsync(int id)
@@ -38,6 +41,7 @@ public class EmprestimoController : ControllerBase
             return Ok(busca);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
 
     public async Task<ActionResult> PostAsync(EmprestimoDto dto)
@@ -47,6 +51,7 @@ public class EmprestimoController : ControllerBase
         return Ok("Livros adicionados com sucesso");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
 
     public async Task<ActionResult> DeleteAsync(int id, EmprestimoDto emprestado)

@@ -10,6 +10,6 @@ public class DadosUsuario
     public string? Senha { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
-
+    public string Cargo { get; set; } = "Usuario";
     public ICollection<Emprestimo> Emprestimo { get; set; } = new List<Emprestimo>();
 }

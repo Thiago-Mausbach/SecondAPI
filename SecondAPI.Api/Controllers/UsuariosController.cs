@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 
@@ -36,6 +37,7 @@ public class UsuariosController : ControllerBase
             return Ok(busca);
     }
 
+
     [HttpPost]
 
     public async Task<ActionResult> PostAsync([FromBody] DadosUsuario user)
@@ -60,6 +62,7 @@ public class UsuariosController : ControllerBase
         return Ok(busca);
     }
 
+
     [HttpPatch]
 
     public async Task<ActionResult> PatchAsync(int id, [FromBody] DadosUsuario user)
@@ -73,8 +76,8 @@ public class UsuariosController : ControllerBase
 
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
-
     public async Task<ActionResult> DeleteAsync(int id, DadosUsuario user)
     {
         var busca = await _service.BuscaIdAsync(id);
