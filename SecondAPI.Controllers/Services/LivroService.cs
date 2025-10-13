@@ -21,13 +21,16 @@ public class LivroService : ILivroService
 
     }
 
-    public async Task<DadosLivro?> BuscaIdAsync(int id)
+    public async Task<List<DadosLivro>?> BuscaIdAsync(int id)
     {
-        var busca = await _context.Livros.FindAsync(id);
-        if (busca?.IsDeleted == true)
+        var filtro = await _context.Livros.FindAsync(id);
+        if (filtro?.IsDeleted == true)
             return null;
-        else
-            return busca;
+
+        var busca = await _context.Livros.Where(l => l.Id == id).Include(l => l.Emprestimos)
+            .ToListAsync();
+
+        return busca;
     }
 
     public async Task<List<DadosLivro>> CriarAsync(List<DadosLivro> livros)
@@ -79,14 +82,14 @@ public class LivroService : ILivroService
         await _context.SaveChangesAsync();
         return (busca);
     }
-    public async Task<DadosLivro> DeletarAsync(int id, DadosLivro livro)
+    public async Task<DadosLivro> DeletarAsync(int id)
     {
 
         var busca = await _context.Livros.FindAsync(id);
 
         if (busca == null)
         {
-            return livro;
+            return busca;
         }
         else
         {

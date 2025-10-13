@@ -77,14 +77,13 @@ public class LivrosController : ControllerBase
 
     public async Task<ActionResult> DeleteAsync(int id)
     {
-        var delete = await _service.BuscaIdAsync(id);
 
-        if (delete == null)
+        if (id == null)
             return BadRequest($"{id} não econtrado");
         else
         {
-            await _service.DeletarAsync(delete.Id, delete);
+            await _service.DeletarAsync(id);
         }
-        return Ok($"O livro \"{delete.Titulo}\" foi deletado");
+        return Ok($"O livro \"{id}\" foi deletado");
     }
 }

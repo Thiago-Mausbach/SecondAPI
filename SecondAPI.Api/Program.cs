@@ -48,8 +48,8 @@ public class Program
                ValidateAudience = true,
                ValidateLifetime = true,
                ValidateIssuerSigningKey = true,
-               ValidIssuer = "localhost:7146",
-               ValidAudience = "localhost:5173",
+               ValidIssuer = builder.Configuration["Jwt:Issuer"],
+               ValidAudience = builder.Configuration["Jwt:Audience"],
                IssuerSigningKey = new SymmetricSecurityKey(
                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
                )
@@ -60,9 +60,9 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        var app = builder.Build();
-
         builder.Services.AddAuthorization();
+
+        var app = builder.Build();
 
         app.UseSwagger();
         app.UseSwaggerUI();

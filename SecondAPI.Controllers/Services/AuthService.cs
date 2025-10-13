@@ -26,20 +26,22 @@ public class AuthService : IAuthService
 
     public async Task<AuthResult> LoginAsync(LoginViewModel model)
     {
-        var user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == model.Email);
+        DadosUsuario? user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == model.Email);
         if (user == null || _passwordHasher.VerifyHashedPassword(user, user.Senha, model.Senha) != PasswordVerificationResult.Success)
             return new AuthResult { Sucesso = false, Mensagem = "Email ou senha incorretos" };
 
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+        var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Cargo)
+            new Claim(ClaimTypes.Role, user.Cargo),
+            new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]!),
+            new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"]!)
         }),
             Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

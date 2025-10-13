@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 function ProtectedRoute({ children }) {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("Token");
     if (!token) {
         return <Navigate to="/" replace />;
     }
@@ -17,7 +17,7 @@ function ProtectedRoute({ children }) {
 }
 
 axios.interceptors.request.use((config) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("Token");
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -54,8 +54,8 @@ function Home() {
                 senha: usuario.senha
             });
 
-            const token = response.data.token;
-            localStorage.setItem("authToken", token);
+            localStorage.setItem("Token", response.data.token);
+            console.log(response.data.token);
 
             setMensagem("Login realizado com sucesso!");
 
@@ -182,7 +182,7 @@ function Emprestimos() {
     }
 
     const requestGet = async () => {
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("Token");
         await axios.get(baseUrl, {
             headers: {
                 Authorization: `Bearer ${token}`

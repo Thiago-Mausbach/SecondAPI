@@ -27,6 +27,6 @@ public class AuthController : ControllerBase
         if (!result.Sucesso)
             return Unauthorized(result.Mensagem);
 
-        return Ok(result.Token);
+        return Ok(new { token = result.Token });
     }
 }

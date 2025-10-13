@@ -18,7 +18,7 @@ public class EmprestimoController : ControllerBase
 
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<EmprestimoDto>>> GetAsync()
     {
