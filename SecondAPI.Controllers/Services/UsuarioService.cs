@@ -17,7 +17,7 @@ public class UsuarioService : IUsuarioService
 
     public async Task<List<DadosUsuario>> BuscaAsync()
     {
-        List<DadosUsuario> lista = await _context.Usuarios.Where(u => !u.IsDeleted).ToListAsync();
+        List<DadosUsuario> lista = await _context.Usuarios.ToListAsync();
         return lista;
     }
 

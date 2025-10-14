@@ -16,7 +16,7 @@ public class LivroService : ILivroService
 
     public async Task<List<DadosLivro>> BuscaAsync()
     {
-        List<DadosLivro> livros = await _context.Livros.Where(l => !l.IsDeleted).ToListAsync();
+        List<DadosLivro> livros = await _context.Livros.ToListAsync();
         return livros;
 
     }
@@ -27,7 +27,8 @@ public class LivroService : ILivroService
         if (filtro?.IsDeleted == true)
             return null;
 
-        var busca = await _context.Livros.Where(l => l.Id == id).Include(l => l.Emprestimos)
+        var busca = await _context.Livros.Where(l => l.Id == id)
+            .Include(l => l.Emprestimos)
             .ToListAsync();
 
         return busca;

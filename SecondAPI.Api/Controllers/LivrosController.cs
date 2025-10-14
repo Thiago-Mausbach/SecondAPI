@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SecondAPI.Domain;
+using SecondAPI.Domain.Dtos;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
 
@@ -31,14 +33,30 @@ public class LivrosController : ControllerBase
     [AllowAnonymous]
     [HttpGet("{id}")]
 
-    public async Task<ActionResult<DadosLivro>> GetIdAsync(int id)
+    public async Task<ActionResult> GetIdAsync(int id)
     {
-        var busca = await _service.BuscaIdAsync(id);
+        List<DadosLivro?>? busca = await _service.BuscaIdAsync(id);
         if (busca == null)
             return NotFound($"Id {id} não encontrado.");
         else
-            return Ok(busca);
+        {
+            var resultado = busca.Select(e => new LivroDto
+            {
+                TituloLivro = e.Titulo,
+                Emprestimos = e.Emprestimos.Select(e => new EmprestimoDto
+                {
+                    Id = e.Id,
+                    DataEmprestimo = e.DataEmprestimo,
+                    DataDevolucao = e.DataDevolucao
+                }).ToList()
+            }).ToList();
+
+            resultado = busca.Select(x => x.ToDto()).ToList();
+
+            return Ok(resultado);
+        }
     }
+
 
     [Authorize(Roles = "Admin")]
     [HttpPost]

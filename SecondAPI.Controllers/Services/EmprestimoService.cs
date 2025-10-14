@@ -18,7 +18,6 @@ public class EmprestimoService : IEmprestimoService
     public async Task<List<EmprestimoDto>> BuscaAsync()
     {
         List<EmprestimoDto> emprestimos = await _context.Emprestimos
-            .Where(l => !l.IsDeleted)
             .Include(e => e.DadosUsuario)
             .Include(e => e.DadosLivro)
             .Select(e => new EmprestimoDto
@@ -36,6 +35,7 @@ public class EmprestimoService : IEmprestimoService
     public async Task<Emprestimo?> BuscaIdAsync(int id)
     {
         var busca = await _context.Emprestimos.FindAsync(id);
+
         if (busca?.IsDeleted == true)
             return null;
         else

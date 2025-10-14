@@ -19,6 +19,12 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+
+        modelBuilder.Entity<DadosLivro>().HasQueryFilter(l => !l.IsDeleted);
+        modelBuilder.Entity<DadosUsuario>().HasQueryFilter(u => !u.IsDeleted);
+        modelBuilder.Entity<Emprestimo>().HasQueryFilter(e => !e.IsDeleted);
+
+
         modelBuilder.Entity<Emprestimo>(e =>
         {
             e.HasOne(x => x.DadosLivro)
