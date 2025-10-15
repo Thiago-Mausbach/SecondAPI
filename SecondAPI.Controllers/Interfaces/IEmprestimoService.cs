@@ -5,7 +5,7 @@ namespace SecondAPI.Services.Interfaces;
 
 public interface IEmprestimoService
 {
-    Task<List<EmprestimoDto>> BuscaAsync();
+    Task<List<Emprestimo>> BuscaAsync();
     Task<Emprestimo?> BuscaIdAsync(int id);
     Task<Emprestimo?> CriarAsync(EmprestimoDto dto);
     Task<Emprestimo> DeletarAsync(int id, EmprestimoDto dto);

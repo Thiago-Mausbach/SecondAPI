@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SecondAPI.Domain;
 using SecondAPI.Domain.Dtos;
 using SecondAPI.Domain.Model;
 using SecondAPI.Services.Interfaces;
@@ -26,7 +27,10 @@ public class EmprestimoController : ControllerBase
         if (livros == null || livros.Count == 0)
             return BadRequest("Nenhum Livro");
         else
-            return Ok(livros);
+        {
+            var result = livros.Select(l => l.ToEmprestimoDto()).ToList();
+            return Ok(result);
+        }
     }
 
     [Authorize(Roles = "Admin")]

@@ -40,18 +40,20 @@ public class LivrosController : ControllerBase
             return NotFound($"Id {id} não encontrado.");
         else
         {
-            var resultado = busca.Select(e => new LivroDto
-            {
-                TituloLivro = e.Titulo,
-                Emprestimos = e.Emprestimos.Select(e => new EmprestimoDto
-                {
-                    Id = e.Id,
-                    DataEmprestimo = e.DataEmprestimo,
-                    DataDevolucao = e.DataDevolucao
-                }).ToList()
-            }).ToList();
+            var resultado = busca.Select(x => x.ToLivroDto()).ToList();
+            //var resultado = busca.Select(e => new LivroDto
+            //{
+            //    TituloLivro = e.Titulo,
+            //    Emprestimos = e.Emprestimos.Select(e => new EmprestimoDto
+            //    {
+            //        Id = e.Id,
+            //        DataEmprestimo = e.DataEmprestimo,
+            //        DataDevolucao = e.DataDevolucao,
+            //        LivroTitulo = e.DadosLivro.Titulo,
+            //        UsuarioEmail = e.DadosUsuario.Email
+            //    }).ToList()
+            //}).ToList();
 
-            resultado = busca.Select(x => x.ToDto()).ToList();
 
             return Ok(resultado);
         }

@@ -15,19 +15,11 @@ public class EmprestimoService : IEmprestimoService
         _context = context;
     }
 
-    public async Task<List<EmprestimoDto>> BuscaAsync()
+    public async Task<List<Emprestimo>> BuscaAsync()
     {
-        List<EmprestimoDto> emprestimos = await _context.Emprestimos
+        List<Emprestimo> emprestimos = await _context.Emprestimos
             .Include(e => e.DadosUsuario)
             .Include(e => e.DadosLivro)
-            .Select(e => new EmprestimoDto
-            {
-                Id = e.Id,
-                UsuarioEmail = e.DadosUsuario.Email,
-                LivroTitulo = e.DadosLivro.Titulo,
-                DataEmprestimo = e.DataEmprestimo,
-                DataDevolucao = e.DataDevolucao
-            })
             .ToListAsync();
         return emprestimos;
     }
