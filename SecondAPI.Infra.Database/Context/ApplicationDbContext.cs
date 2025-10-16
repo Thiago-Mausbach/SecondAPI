@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using SecondAPI.Domain.Interfaces;
 using SecondAPI.Domain.Model;
+using System.Linq.Expressions;
 
 
 
@@ -18,12 +20,24 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-
         modelBuilder.Entity<DadosLivro>().HasQueryFilter(l => !l.IsDeleted);
         modelBuilder.Entity<DadosUsuario>().HasQueryFilter(u => !u.IsDeleted);
         modelBuilder.Entity<Emprestimo>().HasQueryFilter(e => !e.IsDeleted);
 
+
+        var softDeleteEntities = typeof(ISoftDelete).Assembly.GetTypes()
+    .Where(type => typeof(ISoftDelete)
+                    .IsAssignableFrom(type)
+                    && type.IsClass
+                    && !type.IsAbstract);
+
+        foreach (var softDeleteEntity in softDeleteEntities)
+        {
+            modelBuilder.Entity(softDeleteEntity).HasQueryFilter(
+                  GenerateQueryFilterLambda(softDeleteEntity));
+
+            modelBuilder.Entity(softDeleteEntity).HasIndex(nameof(ISoftDelete.IsDeleted));
+        }
 
         modelBuilder.Entity<Emprestimo>(e =>
         {
@@ -34,15 +48,28 @@ public class AppDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
-}
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
-{
-    public AppDbContext CreateDbContext(string[] args)
+
+
+    private static LambdaExpression? GenerateQueryFilterLambda(Type type)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=Biblioteca;User Id=sa;Password=Biblioteca@123;TrustServerCertificate=True;");
+        var parameter = Expression.Parameter(type, "w");
+        var falseConstantValue = Expression.Constant(false);
+        var propertyAccess = Expression.PropertyOrField(parameter, nameof(ISoftDelete.IsDeleted));
+        var equalExpression = Expression.Equal(propertyAccess, falseConstantValue);
+        var lambda = Expression.Lambda(equalExpression, parameter);
 
-        return new AppDbContext(optionsBuilder.Options);
+        return lambda;
+    }
+
+    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    {
+        public AppDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=Biblioteca;User Id=sa;Password=Biblioteca@123;TrustServerCertificate=True;");
+
+            return new AppDbContext(optionsBuilder.Options);
+        }
     }
 }

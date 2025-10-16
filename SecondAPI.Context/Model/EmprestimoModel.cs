@@ -1,6 +1,8 @@
-﻿namespace SecondAPI.Domain.Model;
+﻿using SecondAPI.Domain.Interfaces;
 
-public class Emprestimo
+namespace SecondAPI.Domain.Model;
+
+public class Emprestimo : ISoftDelete
 {
     public int Id { get; set; }
     public DadosLivro DadosLivro { get; set; } = null!;

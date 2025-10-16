@@ -18,12 +18,11 @@ namespace SecondAPI.Domain
                     DataEmprestimo = e.DataEmprestimo,
                     DataDevolucao = e.DataDevolucao
                 }).ToList()
-
             };
-                return result;
+            return result;
         }
 
-        public static EmprestimoDto ToEmprestimoDto (this Emprestimo value)
+        public static EmprestimoDto ToEmprestimoDto(this Emprestimo value)
         {
             var result = new EmprestimoDto
             {

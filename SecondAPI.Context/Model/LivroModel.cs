@@ -1,6 +1,8 @@
-﻿namespace SecondAPI.Domain.Model;
+﻿using SecondAPI.Domain.Interfaces;
 
-public class DadosLivro
+namespace SecondAPI.Domain.Model;
+
+public class DadosLivro : ISoftDelete
 {
     public int Id { get; set; }
     public string Titulo { get; set; } = null!;
